@@ -1,0 +1,84 @@
+@use "../mixins/border" as *;
+@use "../mixins/breakpoint" as *;
+
+.card-collection {
+
+  background: var(--theme-colour--black);
+  display: grid;
+  width: 100;
+  grid-template-columns: repeat( 1, 1fr );
+  row-gap: var(--theme-border--width);
+  overflow: hidden;
+
+  &__item,
+  &__content {
+    width: 100%;
+  }
+
+  &__content {
+    padding: 35px var(--theme-layout--gutter);
+    display: inline-flex;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  &__cta {
+    margin-top: 18px;
+  }
+
+  &__title {
+    & + .card-collection__description {
+      margin-top: 18px;
+    }
+  }
+
+  @include breakpoint(sm) {}
+
+  @include breakpoint(md) {
+
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: var(--theme-border--width);
+    row-gap: 0;
+    grid-template-columns: repeat( 2, 1fr );
+
+    &__content {
+      height: 100%;
+    }
+
+    &__cta {
+      margin-top: 38px;
+    }
+
+  }
+
+  @include breakpoint(lg) {
+
+    &__content {
+      padding-left: 8%;
+      padding-right: 8%;
+    }
+
+  }
+
+  @include breakpoint(xl) {
+
+    &__content {
+      padding-left: 9%;
+      padding-right: 9%;
+    }
+
+  }
+
+  @include breakpoint(xxl) {
+
+    &__content {
+      padding-left: 10%;
+      padding-right: 10%;
+    }
+
+  }
+
+}

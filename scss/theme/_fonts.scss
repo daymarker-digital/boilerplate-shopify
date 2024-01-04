@@ -1,0 +1,27 @@
+// ---------------------------------------- Not Sorry Serif | Normal
+@font-face {
+  font-family: 'Not Sorry Serif';
+  src: url('./NotSorrySerif-Bold.eot');
+  src: url('./NotSorrySerif-Bold.eot?#iefix') format('embedded-opentype'),
+      url('./NotSorrySerif-Bold.woff2') format('woff2'),
+      url('./NotSorrySerif-Bold.woff') format('woff'),
+      url('./NotSorrySerif-Bold.ttf') format('truetype'),
+      url('./NotSorrySerif-Bold.svg#NotSorrySerif-Bold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ---------------------------------------- Sorry Sans | Bold Extended
+@font-face {
+  font-family: 'Sorry Sans';
+  src: url('./SorrySans-BoldExtended.eot');
+  src: url('./SorrySans-BoldExtended.eot?#iefix') format('embedded-opentype'),
+    url('./SorrySans-BoldExtended.ttf') format('truetype'),
+    url('./SorrySans-BoldExtended.woff2') format('woff2'),
+    url('./SorrySans-BoldExtended.woff') format('woff'),
+    url('./SorrySans-BoldExtended.svg#NotSorrySerif-Bold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

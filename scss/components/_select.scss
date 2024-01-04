@@ -1,0 +1,18 @@
+@use '../mixins/ui' as *;
+
+.select {
+
+  @extend %ui-base;
+  @extend %ui-input;
+
+  &--primary,
+  &--secondary {
+    @extend .select;
+  }
+
+  &[disabled],
+  &.disabled {
+    @extend %ui-disabled;
+  }
+
+}

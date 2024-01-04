@@ -1,0 +1,17 @@
+{%- liquid
+
+  assign snippet_name = 'label'
+  assign snippet_classes = snippet_name
+
+  assign classes = classes | default: ''
+  assign value = value | default: ''
+
+  if classes
+    assign snippet_classes = snippet_classes | append: ' ' | append: classes | strip
+  endif
+
+-%}
+
+{% if value and value != blank %}
+  <label class="{{- snippet_classes -}}">{{- value -}}</label>
+{% endif %}

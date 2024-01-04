@@ -1,0 +1,271 @@
+{%- liquid
+
+  assign section_name = 'marquee'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+  assign aos_id = section_id
+
+  assign section_container = section.settings.container | default: 'container'
+  assign section_marquee_background =  section.settings.marquee_background | default: 'black'
+  assign section_marquee_blocks = section.blocks | where: 'type', 'marquee' | default: false
+  assign section_marquee_direction = section.settings.marquee_direction | default: ''
+  assign section_marquee_duration = section.settings.marquee_duration | default: 1000
+  assign section_marquee_font_size = section.settings.marquee_font_size | default: ''
+  assign section_marquee_font_style = section.settings.marquee_font_style | default: ''
+  assign section_marquee_gap = section.settings.marquee_gap | default: 0
+  assign section_marquee_padding_bottom = section.settings.marquee_padding_bottom | default: 0
+  assign section_marquee_padding_top = section.settings.marquee_padding_top | default: 0
+  assign section_marquee_range = (1..10)
+  assign section_text_case = section.settings.text_case | default: "none"
+
+  assign section_classes = section_classes | append: " " | append: section_name | append: "--" | append: section_marquee_direction
+
+  capture aos_attrs
+    render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+  endcapture
+  assign aos_delay = aos_delay | plus: aos_delay_increment
+
+-%}
+
+{%- style -%}
+
+  #{{ section_id }} {
+    --marquee-duration: {{ section_marquee_duration }}s;
+    --marquee-gap: {{ section_marquee_gap }}px;
+  }
+
+  #{{ section_id }} .{{ section_name }}__main {
+    background: var(--theme-colour--{{ section_marquee_background }});
+    font-family: var(--theme-font-family--{{ section_marquee_font_style }});
+    font-size: {{ section_marquee_font_size }}px;
+    padding-top: calc({{ section_marquee_padding_top }}px * 0.75);
+    padding-bottom: calc({{ section_marquee_padding_bottom }}px * 0.75);
+    text-transform: {{ section_text_case }};
+  }
+
+  {%
+    render 'element-styles',
+      background: section.settings.background,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top,
+      text_colour: section.settings.text_colour
+  -%}
+
+{%- endstyle -%}
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  <div class="{{ section_name }}__layout">
+    <div class="{{ section_name }}__main" {{ aos_attrs }}>
+      {%- if section_marquee_blocks.size > 0 -%}
+        <div class="{{ section_name }}__group">
+          {%- for i in section_marquee_range -%}
+            {%- if 1 == i -%}
+              {%- render 'marquee-items', hidden: false, marquee_items: section_marquee_blocks -%}
+            {%- else -%}
+              {%- render 'marquee-items', hidden: true, marquee_items: section_marquee_blocks -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="{{ section_name }}__group" aria-hidden="true">
+          {%- for i in section_marquee_range -%}
+            {%- render 'marquee-items', hidden: false, marquee_items: section_marquee_blocks -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": "section",
+  "class": "section section--marquee",
+  "settings": [
+     {
+			"content": "Settings",
+			"type": "header"
+		},
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+			"content": "Background",
+			"type": "header"
+		},
+    {
+		  "label": "Background",
+		  "type": "select",
+		  "options": [
+        { "label": "Black", "value": "black" },
+			  { "label": "White", "value": "white" },
+        { "label": "Yellow", "value": "yellow" }
+		  ],
+		  "default": "white",
+		  "id": "background"
+		},
+    {
+			"content": "Marquee",
+			"type": "header"
+		},
+    {
+		  "label": "Marquee Background",
+		  "type": "select",
+		  "options": [
+        { "label": "Black", "value": "black" },
+			  { "label": "White", "value": "white" },
+        { "label": "Yellow", "value": "yellow" }
+		  ],
+		  "default": "black",
+		  "id": "marquee_background"
+		},
+    {
+		  "label": "Marquee Direction",
+		  "type": "select",
+		  "options": [
+        { "label": "Left to Right", "value": "ltr" },
+			  { "label": "Right to Left", "value": "rtl" }
+		  ],
+		  "default": "ltr",
+		  "id": "marquee_direction"
+		},
+    {
+		  "label": "Marquee Duration",
+		  "type": "range",
+			"min": 0,
+			"max": 500,
+			"step": 5,
+			"default": 100,
+		  "id": "marquee_duration"
+		},
+    {
+		  "label": "Marquee Font Size",
+		  "type": "range",
+			"min": 10,
+			"max": 200,
+			"step": 2,
+			"default": 30,
+		  "id": "marquee_font_size"
+		},
+    {
+		  "label": "Marquee Font Style",
+		  "type": "select",
+		  "options": [
+        { "label": "Akkurat Mono LL", "value": "akkurat-mono-ll" },
+        { "label": "Not Sorry Serif", "value": "not-sorry-serif" },
+        { "label": "Sorry Sans", "value": "sorry-sans" }
+		  ],
+		  "default": "sorry-sans",
+		  "id": "marquee_font_style"
+		},
+    {
+		  "label": "Marquee Gap",
+		  "type": "range",
+			"min": 0,
+			"max": 200,
+			"step": 5,
+			"default": 25,
+		  "id": "marquee_gap"
+		},
+    {
+			"label": "Marquee Top Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 36,
+      "id": "marquee_padding_top"
+		},
+    {
+			"label": "Marquee Bottom Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 36,
+      "id": "marquee_padding_bottom"
+		},
+    {
+			"content": "Padding",
+			"type": "header"
+		},
+		{
+			"label": "Top Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 36,
+      "id": "padding_top"
+		},
+		{
+			"label": "Bottom Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 36,
+      "id": "padding_bottom"
+		},
+    {
+      "content": "Text",
+      "type": "header"
+    },
+    {
+      "label": "Text Case",
+      "type": "select",
+      "options": [
+        { "label": "Capitalize", "value": "capitalize" },
+        { "label": "Lowercase", "value": "lowercase" },
+        { "label": "No Change", "value": "none" },
+        { "label": "Uppercase", "value": "uppercase" }
+      ],
+      "default": "none",
+      "id": "text_case"
+    },
+    {
+      "label": "Text Colour",
+      "type": "select",
+      "options": [
+        { "label": "Dark", "value": "dark" },
+        { "label": "Light", "value": "light" }
+      ],
+      "default": "dark",
+      "id": "text_colour"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Marquee",
+      "type": "marquee",
+      "limit": 9,
+      "settings": [
+        {
+          "label": "Text",
+          "type": "text",
+          "id": "text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"]
+  }
+}
+{% endschema %}

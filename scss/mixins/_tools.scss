@@ -1,0 +1,18 @@
+@use "sass:meta";
+@use "sass:string";
+
+@mixin scss-map-to-css-var( $css-var-name: '', $map: () ) {
+  @each $name, $value in $map {
+
+    @if "string" == meta.type-of($value) {
+      $value: string.unquote($value);
+    }
+
+    @if $name == 'base' {
+      #{$css-var-name}: #{$value};
+    } @else {
+      #{$css-var-name}--#{$name}: #{$value};
+    }
+
+  }
+}

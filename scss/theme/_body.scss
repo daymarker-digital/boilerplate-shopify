@@ -1,0 +1,29 @@
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+
+  background: var(--theme-colour--white);
+  color: var(--theme-colour--black);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  font-weight: 400;
+
+  main {
+    padding-top: 0;
+    flex: 1 0 auto;
+  }
+
+  footer {
+    flex-shrink: 0;
+  }
+
+}

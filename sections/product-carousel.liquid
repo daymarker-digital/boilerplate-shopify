@@ -1,0 +1,382 @@
+{%- liquid
+
+  assign section_name = 'product-carousel'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign section_carousel_animation_duration = section.settings.carousel_animation_duration | default: 450
+  assign section_carousel_autoplay = section.settings.carousel_autoplay | default: 3500
+  assign section_carousel_enabled = false
+  assign section_carousel_gap = section.settings.carousel_gap | default: 28
+  assign section_carousel_id = section_id | append: '--glide'
+  assign section_carousel_navigation = false
+  assign section_carousel_pagination = false
+  assign section_carousel_style = section_name
+
+  assign section_heading = section.settings.heading | default: ''
+
+  assign section_product_blocks = section.blocks | where: "type", "product"
+  assign section_product_blocks_size = section_product_blocks.size | default: 0
+  assign section_product_image_aspect_ratio_desktop = section.settings.product_image_aspect_ratio_desktop | default: ''
+  assign section_product_image_aspect_ratio_mobile = section.settings.product_image_aspect_ratio_mobile | default: ''
+
+  if section_product_blocks_size > 1
+    assign section_carousel_enabled = true
+  endif
+
+-%}
+
+{% if section_product_blocks_size > 0 %}
+
+  {%- style -%}
+
+    {% if section_product_image_aspect_ratio_mobile and section_product_image_aspect_ratio_mobile != blank %}
+      #{{ section_id }} .card-product__image,
+      #{{ section_id }} .card-product__image-link {
+        aspect-ratio: {{ section_product_image_aspect_ratio_mobile }};
+      }
+    {% endif %}
+
+    @media screen and (min-width: 992px) {
+      {% if section_product_image_aspect_ratio_desktop and section_product_image_aspect_ratio_desktop != blank %}
+        #{{ section_id }} .card-product__image,
+        #{{ section_id }} .card-product__image-link {
+          aspect-ratio: {{ section_product_image_aspect_ratio_desktop }};
+        }
+      {% endif %}
+    }
+
+    {%
+      render 'element-styles',
+        background: section.settings.background,
+        background_image: section.settings.background_image,
+        background_image_position_desktop: section.settings.background_image_position_desktop,
+        background_image_position_mobile: section.settings.background_image_position_mobile,
+        background_image_repeat: section.settings.background_image_repeat,
+        background_image_size: section.settings.background_image_size,
+        border_bottom: section.settings.border_bottom,
+        border_top: section.settings.border_top,
+        id: section_id,
+        padding_bottom: section.settings.padding_bottom,
+        padding_top: section.settings.padding_top
+    %}
+
+  {%- endstyle -%}
+
+  <div class="{{ section_classes }}" id="{{ section_id }}">
+    <div class="{{ section_name }}__main">
+
+      {%- if section_heading != blank -%}
+        {%- liquid
+          capture aos_attrs
+            render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+          endcapture
+          assign aos_delay = aos_delay | plus: aos_delay_increment
+        -%}
+        <h2 class="{{ section_name }}__heading heading--primary heading--1" {{ aos_attrs }}>{{ section_heading }}</h2>
+      {%- endif -%}
+
+
+      {%- if section_carousel_enabled -%}
+        <div
+          class="{{ section_name }}__glide glide js--glide"
+          data-glide-animation-duration="{{ section_carousel_animation_duration }}"
+          data-glide-autoplay="{{ section_carousel_autoplay }}"
+          data-glide-gap="{{ section_carousel_gap }}"
+          data-glide-style="{{ section_carousel_style }}"
+          id="{{ section_carousel_id }}"
+        >
+      {%- endif -%}
+
+        {%- if section_carousel_enabled -%}<div class="glide__track" data-glide-el="track">{%- endif -%}
+          {%- if section_carousel_enabled -%}<ul class="glide__slides">{%- endif -%}
+
+            {%- for block in section_product_blocks -%}
+              {%- if section_carousel_enabled -%}<li class="glide__slide">{%- endif -%}
+                {%-
+                  render 'card-product-carousel',
+                    card_colour: block.settings.colour,
+                    card_featured_image: block.settings.featured_image,
+                    card_note: block.settings.note,
+                    card_product: block.settings.product
+                    card_title: block.settings.title
+                -%}
+              {%- if section_carousel_enabled -%}</li>{%- endif -%}
+            {%- endfor -%}
+
+          {%- if section_carousel_enabled -%}</ul>{%- endif -%}
+        {%- if section_carousel_enabled -%}</div>{%- endif -%}
+      {%- if section_carousel_enabled -%}</div>{%- endif -%}
+
+    </div>
+  </div>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "tag": "section",
+  "class": "section section--product-carousel",
+  "settings": [
+    {
+      "content": "Content",
+      "type": "header"
+    },
+    {
+      "label": "Heading",
+      "type": "text",
+      "id": "heading"
+    },
+    {
+      "content": "Settings",
+      "type": "header"
+    },
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+      "label": "Background",
+      "type": "select",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "Lemon", "value": "lemon" },
+        { "label": "Lime", "value": "lime" },
+        { "label": "Mango", "value": "mango" },
+        { "label": "None", "value": "none" },
+        { "label": "Orange", "value": "orange" },
+        { "label": "Strawberry", "value": "strawberry" }
+      ],
+      "default": "none",
+      "id": "background"
+    },
+    {
+      "label": "Background Image",
+      "type": "image_picker",
+      "id": "background_image"
+    },
+    {
+      "label": "Background Image Position (Mobile)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_mobile"
+    },
+    {
+      "label": "Background Image Position (Desktop)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_desktop"
+    },
+    {
+      "label": "Background Image Repeat",
+      "type": "select",
+      "options": [
+        { "label": "No Repeat", "value": "no-repeat" },
+        { "label": "Repeat", "value": "repeat" }
+      ],
+      "default": "repeat",
+      "id": "background_image_repeat"
+    },
+    {
+      "label": "Background Image Size",
+      "type": "select",
+      "options": [
+        { "label": "100px", "value": "100px" },
+        { "label": "200px", "value": "200px" },
+        { "label": "300px", "value": "300px" },
+        { "label": "400px", "value": "400px" },
+        { "label": "500px", "value": "500px" },
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
+      ],
+      "default": "cover",
+      "id": "background_image_size"
+    },
+    {
+      "content": "Border",
+      "type": "header"
+    },
+    {
+      "label": "Top Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_top"
+    },
+    {
+      "label": "Bottom Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_bottom"
+    },
+    {
+      "content": "Carousel",
+      "type": "header"
+    },
+    {
+      "label": "Carousel Autoplay",
+      "info": "Time in milliseconds before a slide changes. Set to '0' to disable autoplay.",
+      "type": "range",
+      "min": 0,
+      "max": 8000,
+      "step": 250,
+      "default": 3000,
+      "id": "carousel_autoplay"
+    },
+    {
+      "label": "Carousel Animation Duration",
+      "info": "Duration of the slide transition animation in milliseconds.",
+      "type": "range",
+      "min": 250,
+      "max": 3500,
+      "step": 50,
+      "default": 450,
+      "id": "carousel_animation_duration"
+    },
+    {
+      "label": "Carousel Slide Gap",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 20,
+      "id": "carousel_gap"
+    },
+    {
+      "content": "Padding",
+      "type": "header"
+    },
+    {
+      "label": "Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_top"
+    },
+    {
+      "label": "Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_bottom"
+    },
+    {
+      "content": "Product",
+      "type": "header"
+    },
+    {
+      "label": "Image Aspect Ratio (Mobile)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on smaller devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_mobile"
+    },
+    {
+      "label": "Image Aspect Ratio (Desktop)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on larger devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_desktop"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "limit": 9,
+      "settings": [
+        {
+          "content": "Product",
+          "type": "header"
+        },
+        {
+          "label": "Product",
+          "type": "product",
+          "id": "product"
+        },
+        {
+          "label": "Note",
+          "type": "text",
+          "id": "note"
+        },
+        {
+          "content": "By default, the section will automatically pull details from the selected product. To customize, and override this automation, update the corresponding fields below.",
+          "type": "paragraph"
+        },
+        {
+          "label": "Title",
+          "info": "Optionally override the product title.",
+          "type": "text",
+          "id": "title"
+        },
+        {
+          "label": "Featured Image",
+          "info": "Optionally override the product's featured image.",
+          "type": "image_picker",
+          "id": "featured_image"
+        },
+        {
+          "content": "Settings",
+          "type": "header"
+        },
+        {
+          "label": "Colour",
+          "type": "select",
+          "options": [
+            { "label": "Lemon", "value": "lemon" },
+            { "label": "Lime", "value": "lime" },
+            { "label": "Mango", "value": "mango" },
+            { "label": "Orange", "value": "orange" },
+            { "label": "Strawberry", "value": "strawberry" }
+          ],
+          "default": "lemon",
+          "id": "colour"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

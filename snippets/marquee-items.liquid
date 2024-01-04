@@ -1,0 +1,34 @@
+{%- if marquee_items and marquee_items.size > 0 -%}
+
+  {%- liquid
+
+    comment
+      Accepts:
+        - hidden: {Boolean} Conditionally hide content
+        - id: {String} Unique ID for element
+        - marquee_items: {Array/Collection} Collection of section blocks
+    endcomment
+
+    assign snippet_name = 'marquee'
+    assign snippet_classes = snippet_name
+    assign snippet_id = snippet_name | append: id
+
+    assign aos_id = snippet_id | append: '--aos'
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+
+  -%}
+
+  {%- for item in marquee_items -%}
+
+    {%- liquid
+      assign text = item.settings.text | default: ""
+    -%}
+
+    {%- if text -%}
+      <span>{{ text }}</span>
+    {%- endif -%}
+
+  {%- endfor -%}
+
+{%- endif -%}

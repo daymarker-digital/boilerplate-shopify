@@ -1,0 +1,23 @@
+{%- if product and product != blank -%}
+
+  {%- liquid
+
+    assign snippet_name = 'price'
+    assign snippet_classes = classes | default: snippet_name | append: ' body-copy--primary'
+
+    assign aos_attrs = aos_attrs | default: ''
+    assign price = product.price
+    assign price_compare_at = product.compare_at_price
+
+  -%}
+
+  <div class="{{ snippet_classes }}"{% if aos_attrs != blank %}{{ aos_attrs }}{% endif %}>
+    <span class="{{ snippet_name }}__value">{{- price | money -}}</span>
+    {%- if price_compare_at and price_compare_at != blank -%}
+      <span class="{{ snippet_name }}__value sale-price">
+        {{- price_compare_at | money -}}
+      </span>
+    {%- endif -%}
+  </div>
+
+{%- endif -%}

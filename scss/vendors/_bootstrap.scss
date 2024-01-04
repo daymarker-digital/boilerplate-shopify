@@ -1,0 +1,6 @@
+@use "sass:map";
+@use "../variables" as *;
+
+$grid-gutter-width: map.get( $theme-layout-settings, 'gutter' );
+$container-max-widths: map.get( $theme-layout-settings, 'containers' );
+$grid-breakpoints: map.get( $theme-layout-settings, 'breakpoints' );

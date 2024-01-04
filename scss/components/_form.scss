@@ -1,0 +1,22 @@
+.form {
+
+  .error {
+    .input,
+    .textarea {
+      background: rgba(var(--theme-colour-black), 0.075);
+      border-color: red;
+    }
+  }
+
+  &__button {
+    width: 100%;
+  }
+
+  &__field {
+    & + .form__button,
+    & + .form__field {
+      margin-top: 18px;
+    }
+  }
+
+}

@@ -1,0 +1,30 @@
+{% comment %}
+  Renders Bootstrap container, row and column elements
+
+  Accepts:
+  - col: {String} Optionally include column classes
+  - container: {String} Optionally include container classes
+  - state: {String} Open or closed
+
+  Usage:
+  {%-
+    render 'bs-container',
+      col: 'col-12'
+      container: 'container-fluid',
+      state: 'open',
+  -%}
+{% endcomment %}
+
+{%- liquid
+  assign col = col | default: 'col-12'
+  assign container = container | default: 'container'
+  assign state = state | default: 'open'
+-%}
+
+{%- unless 'full-width' == container -%}
+  {%- if state == 'open' -%}
+    <div class="{{ container }}"><div class="row"><div class="{{ col }}">
+  {%- else -%}
+    </div></div></div>
+  {%- endif -%}
+{%- endunless -%}

@@ -1,0 +1,43 @@
+{%- if product and product != blank -%}
+
+  {%- liquid
+
+    assign snippet_name = 'product-options'
+    assign snippet_classes = classes | default: snippet_name
+
+    assign product_available = product.available | default: false
+    assign product_has_no_options = product.has_only_default_variant | default: false
+    assign product_first_variant_available = true
+
+  -%}
+
+  <div class="{{ snippet_classes }}">
+
+    {% unless product_has_no_options %}
+      <strong class="{{ snippet_name }}__heading">Select a Size:</strong>
+    {% endunless %}
+
+    {% for variant in product.variants %}
+      <label class="{{ snippet_name }}__item">
+        <input
+          class="{{ snippet_name }}__input"
+          type="radio"
+          name="id"
+          value="{{ variant.id }}"
+          data-available="{{ variant.available }}"
+          data-compare-at-price="{{ variant.compare_at_price }}"
+          data-inventory-management="{{ variant.inventory_management }}"
+          data-price="{{ variant.price }}"
+          {% unless variant.available %}disabled{% endunless %}
+          {% if variant.available and product_first_variant_available %}
+            checked
+            {% assign product_first_variant_available = false %}
+          {% endif %}
+        />
+        <span class="{{ snippet_name }}__value">{{ variant.title }}</span>
+      </label>
+    {% endfor %}
+
+  </div>
+
+{%- endif -%}

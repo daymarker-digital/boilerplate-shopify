@@ -1,0 +1,299 @@
+{%- liquid
+
+  assign section_name = 'list-collections'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign section_anchor_id = section.settings.anchor_id | default: ''
+  assign section_collection_sorting = section.settings.collection_sorting
+  assign section_collection_content_padding_bottom = section.settings.collection_content_padding_bottom
+  assign section_collection_content_padding_top = section.settings.collection_content_padding_top
+  assign section_collection_content_width = section.settings.collection_content_width
+  assign section_collection_title_size = section.settings.collection_title_size
+  assign section_collection_description_size = section.settings.collection_description_size
+
+  case section_collection_sorting
+    when 'products_high' or 'products_low'
+      assign collections = collections | sort: 'all_products_count'
+    when 'date' or 'date_reversed'
+      assign collections = collections | sort: 'published_at'
+  endcase
+
+  if section_collection_sorting == 'products_high' or section_collection_sorting == 'date_reversed' or section_collection_sorting == 'alphabetical_reversed'
+    assign collections = collections | reverse
+  endif
+
+-%}
+
+{%- style -%}
+
+  {%- if section_collection_content_padding_top > 0 or section_collection_content_padding_bottom > 0 -%}
+    #{{ section_id }} .fifty-fifty__item.text {
+      {%- if section_collection_content_padding_top > 0 -%}
+        padding-top: calc({{ section_collection_content_padding_top }}px * 0.75);
+      {%- endif -%}
+      {%- if section_collection_content_padding_bottom > 0 -%}
+        padding-bottom: calc({{ section_collection_content_padding_bottom }}px  * 0.75);
+      {%- endif -%}
+    }
+  {%- endif -%}
+
+  #{{ section_id }} .fifty-fifty__item.text .fifty-fifty__content {
+    width: {{ section_collection_content_width }}%;
+  }
+
+  @media screen and (min-width: 992px) {
+    #{{ section_id }} .fifty-fifty__item.text {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  {%-
+    render 'element-styles',
+      background: section.settings.background,
+      background_image: section.settings.background_image,
+      background_image_position_desktop: section.settings.background_image_position_desktop,
+      background_image_position_mobile: section.settings.background_image_position_mobile,
+      background_image_repeat: section.settings.background_image_repeat,
+      background_image_size: section.settings.background_image_size,
+      border_bottom: section.settings.border_bottom,
+      border_top: section.settings.border_top,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top
+  -%}
+
+{%- endstyle -%}
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  <div class="{{ section_name }}__grid" role="list">
+    {%- for item in collections -%}
+      {%- capture card_classes -%}
+        {{ section_name }}__item card-collection fifty-fifty
+      {%- endcapture -%}
+      {%-
+        render 'card-collection',
+          card_aria_role: 'listitem',
+          card_classes: card_classes,
+          card_collection: item
+          card_heading_size: section_collection_title_size,
+          card_message_size: section_collection_description_size
+      -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "List Collections",
+  "tag": "section",
+  "class": "section section--list-collections",
+  "templates": [ "list-collections" ],
+  "settings": [
+    {
+      "content": "Collection",
+      "type": "header"
+    },
+    {
+      "label": "Sorting",
+      "type": "select",
+      "options": [
+        { "label": "Alphabetically, A-Z", "value": "alphabetical" },
+        { "label": "Alphabetically, Z-A", "value": "alphabetical_reversed" },
+        { "label": "Date, new to old", "value": "date_reversed" },
+        { "label": "Date, old to new", "value": "date" },
+        { "label": "Product count, high to low", "value": "products_high" },
+        { "label": "Product count, low to high", "value": "products_low" }
+      ],
+      "default": "alphabetical",
+      "id": "collection_sorting"
+    },
+    {
+      "label": "Content Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "collection_content_padding_top"
+    },
+    {
+      "label": "Content Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "collection_content_padding_bottom"
+    },
+    {
+      "label": "Content Width",
+      "type": "range",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "default": 100,
+      "id": "collection_content_width"
+    },
+    {
+      "label": "Title Size",
+      "type": "select",
+      "options": [
+        { "label": "Large", "value": "lg" },
+        { "label": "Medium", "value": "md" },
+        { "label": "Small", "value": "sm" }
+      ],
+      "default": "sm",
+      "id": "collection_title_size"
+    },
+    {
+      "label": "Description Size",
+      "type": "select",
+      "options": [
+        { "label": "Large", "value": "lg" },
+        { "label": "Medium", "value": "md" },
+        { "label": "Small", "value": "sm" }
+      ],
+      "default": "sm",
+      "id": "collection_description_size"
+    },
+    {
+      "content": "Settings",
+      "type": "header"
+    },
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+      "label": "Background",
+      "type": "select",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "Lemon", "value": "lemon" },
+        { "label": "Lime", "value": "lime" },
+        { "label": "Mango", "value": "mango" },
+        { "label": "None", "value": "none" },
+        { "label": "Orange", "value": "orange" },
+        { "label": "Strawberry", "value": "strawberry" }
+      ],
+      "default": "none",
+      "id": "background"
+    },
+    {
+      "label": "Background Image",
+      "type": "image_picker",
+      "id": "background_image"
+    },
+    {
+      "label": "Background Image Position (Desktop)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_desktop"
+    },
+    {
+      "label": "Background Image Position (Mobile)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_mobile"
+    },
+    {
+      "label": "Background Image Repeat",
+      "type": "select",
+      "options": [
+        { "label": "No Repeat", "value": "no-repeat" },
+        { "label": "Repeat", "value": "repeat" }
+      ],
+      "default": "repeat",
+      "id": "background_image_repeat"
+    },
+    {
+      "label": "Background Image Size",
+      "type": "select",
+      "options": [
+        { "label": "100px", "value": "100px" },
+        { "label": "200px", "value": "200px" },
+        { "label": "300px", "value": "300px" },
+        { "label": "400px", "value": "400px" },
+        { "label": "500px", "value": "500px" },
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
+      ],
+      "default": "cover",
+      "id": "background_image_size"
+    },
+    {
+      "content": "Border",
+      "type": "header"
+    },
+    {
+      "label": "Top Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_top"
+    },
+    {
+      "label": "Bottom Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_bottom"
+    },
+    {
+      "content": "Padding",
+      "type": "header"
+    },
+    {
+      "label": "Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_top"
+    },
+    {
+      "label": "Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_bottom"
+    }
+  ]
+}
+{% endschema %}

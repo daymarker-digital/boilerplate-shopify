@@ -1,0 +1,106 @@
+{%- if card_product and card_product != blank -%}
+
+  {% comment %}
+    Renders a product carousel card
+
+    Accepts:
+    - card_colour: {String} Optionally include the name of a colour
+    - card_featured_image: {Object} Optionally include a custom featured image
+    - card_note: {String} Optionally include a note about product
+    - card_product: {Object} Product object
+    - card_title: {String} Optionally include a title
+
+    Usage:
+    {%-
+      render 'card-product-carousel',
+        card_colour: block.settings.colour,
+        card_featured_image: block.settings.featured_image,
+        card_note: block.settings.note,
+        card_product: block.settings.product
+        card_title: block.settings.title
+    -%}
+  {% endcomment %}
+
+  {%- liquid
+
+    assign snippet_name = 'card-product-carousel'
+    assign snippet_classes = snippet_name
+    assign snippet_id = snippet_name | append: '--' | append: card_product.id
+
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+    assign aos_id = snippet_id
+
+    assign snippet_colour = card_colour | default: 'lemon'
+    assign snippet_featured_image = card_featured_image | default: card_product.featured_image
+    assign snippet_hover_image = card_product.images[1] | default: false
+    assign snippet_note = card_note | default: ''
+    assign snippet_product = card_product | default: false
+    assign snippet_title = card_title | default: card_product.title
+    assign snippet_url = card_product.url | default: ''
+
+  -%}
+
+  <article class="{{ snippet_classes }}" id="{{ snippet_id }}">
+
+    {% if snippet_featured_image %}
+      <div class="{{ snippet_name }}__media">
+        {% if snippet_url != blank %}<a class="{{ snippet_name }}__media-link link" href="{{ snippet_url }}" target="_self" title="{{ snippet_title }}">{% endif %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+          <div class="{{ snippet_name }}__media-image" {{ aos_attrs }}>
+            {% render 'lazyload-image', alt_text: snippet_title, image: snippet_featured_image %}
+          </div>
+          {% if snippet_hover_image %}
+            <div class="{{ snippet_name }}__media-image-hover">
+              {% render 'lazyload-image', alt_text: snippet_title, image: snippet_hover_image %}
+            </div>
+          {% endif %}
+        {% if snippet_url != blank %}</a>{% endif %}
+      </div>
+    {% endif %}
+
+    {% if snippet_title != blank %}
+      <div class="{{ snippet_name }}__content text--uppercase">
+
+        {%- liquid
+          capture aos_attrs
+            render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-right'
+          endcapture
+          assign aos_delay = aos_delay | plus: aos_delay_increment
+        -%}
+        <strong class="{{ snippet_name }}__title heading--primary heading--2" {{ aos_attrs }}>{{ snippet_title }}</strong>
+
+        {% if snippet_note != blank %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-right'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+          <div class="{{ snippet_name }}__note body-copy--secondary" {{ aos_attrs }}>{{ snippet_note }}</div>
+        {% endif %}
+
+        {% if snippet_url != blank %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-up'
+            endcapture
+          -%}
+          <div class="{{ snippet_name }}__cta" {{ aos_attrs }}>
+            <a class="{{ snippet_name }}__cta-link link" href="{{ snippet_url }}" target="_self" title="{{ snippet_title }}">
+              <div class="button--svg button--svg-fill-{{ snippet_colour }}">{% render 'svg', type: 'button.learn-more' %}</div>
+            </a>
+          </div>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+  </article>
+
+{% endif %}

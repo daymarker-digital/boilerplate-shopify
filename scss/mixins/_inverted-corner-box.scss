@@ -1,0 +1,100 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../variables' as *;
+@use './breakpoint' as *;
+
+@mixin inverted-corner-box( $outline: "off-black", $fill: "off-white", $style: "button" ) {
+
+  $outline-hex: map.get($theme-colours, $outline);
+  $fill-hex: map.get($theme-colours, $fill);
+
+  @if $style == "button" {
+    @each $name, $value in $theme-button-heights {
+      @if $name == 'base' {
+        height: $value;
+      } @else {
+        @include breakpoint(#{$name}) {
+          height: $value;
+        }
+      }
+    }
+    span, div {
+      color: $outline-hex;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 5;
+    }
+  } @else {
+    height: auto;
+  }
+
+  mask: var(--theme-radial-gradient);
+  display: inline-flex;
+  width: 100%;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+
+  &:after,
+  &:before {
+    mask: var(--theme-radial-gradient);
+    display: block;
+    content: "";
+    position: absolute;
+  }
+
+  // the fill
+  &:after {
+    background: $fill-hex;
+    transition: background var(--theme-transition--duration);
+    top: var(--theme-border--width);
+    left: var(--theme-border--width);
+    bottom: var(--theme-border--width);
+    right: var(--theme-border--width);
+    width: calc( 100% - calc( var(--theme-border--width) * 2 ) );
+    height: calc( 100% - calc( var(--theme-border--width) * 2 ) );
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  // the outline
+  &:before {
+    background: $outline-hex;
+    top: 0;
+    left: 0;
+    z-index: -5;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    &:after {
+      background: color.scale( $fill-hex, $lightness: -20% );
+    }
+  }
+
+  @include breakpoint(lg) {
+
+    mask: var(--theme-radial-gradient--lg);
+
+    &:after,
+    &:before {
+      mask: var(--theme-radial-gradient--lg);
+    }
+
+  }
+
+  @include breakpoint(xxl) {
+
+    mask: var(--theme-radial-gradient--xxl);
+
+    &:after,
+    &:before {
+      mask: var(--theme-radial-gradient--xxl);
+    }
+
+  }
+
+}

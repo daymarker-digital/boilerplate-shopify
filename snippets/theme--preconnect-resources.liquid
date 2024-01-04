@@ -1,0 +1,13 @@
+{%- assign resources = resources | default: '' -%}
+{%- if resources != blank -%}
+
+  {%- assign relationships = 'preconnect', 'dns-prefetch' | split: ', ' -%}
+  {%- assign resources = resources | split: ', ' -%}
+
+  {%- for rel in relationships -%}
+    {%- for resource in resources -%}
+      <link rel='{{ rel }}' href='{{ resource }}'>
+    {%- endfor -%}
+  {%- endfor -%}
+
+{%- endif -%}

@@ -1,0 +1,17 @@
+{% if modal_content and modal_content != blank and modal_id and modal_id != blank %}
+
+  <div class="modal fade" id="{{ modal_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <button class="modal__button button button--close" data-bs-dismiss="modal" type="button">
+          {% render 'svg-icon', type: 'close' %}
+        </button>
+
+        <div class="modal__main">{{ modal_content }}</div>
+
+      </div>
+    </div>
+  </div>
+
+{% endif %}

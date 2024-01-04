@@ -1,0 +1,54 @@
+@use '../mixins/breakpoint' as *;
+@use '../mixins/heading' as *;
+
+.heading {
+
+  &--primary {
+    @include body-copy-style('primary');
+  }
+
+  &--secondary {
+    @include body-copy-style('secondary');
+  }
+
+  &--lg {
+    @include body-copy-size('1');
+  }
+
+  &--md {
+    @include body-copy-size('2');
+  }
+
+  &--sm {
+    @include body-copy-size('3');
+  }
+
+  &--lg-fluid {
+    font-size: min(115px, 16.15vw);
+  }
+
+  &--md-fluid {
+    font-size: min(100px, 10.75vw);
+  }
+
+  &--sm-fluid {
+    font-size: min(90px, 8.75vw);
+  }
+
+  @include breakpoint(lg) {
+
+    &--lg-fluid {
+      font-size: min(115px, 9.25vw);
+    }
+
+    &--md-fluid {
+      font-size: min(100px, 5.25vw);
+    }
+
+    &--sm-fluid {
+      font-size: min(90px, 4.25vw);
+    }
+
+  }
+
+}

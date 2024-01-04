@@ -1,0 +1,316 @@
+{%- liquid
+
+  assign section_name = 'collection-products'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign collection_sort_by = collection.sort_by | default: collection.default_sort_by
+
+  assign section_anchor_id = section.settings.anchor_id | default: ''
+  assign section_container = section.settings.container | default: 'container'
+  assign section_grid_columns = section.settings.grid_columns | default: '2'
+  assign section_grid_gap = section.settings.grid_gap | default: '20'
+  assign section_product_image_aspect_ratio_desktop = section.settings.product_image_aspect_ratio_desktop | default: ''
+  assign section_product_image_aspect_ratio_mobile = section.settings.product_image_aspect_ratio_mobile | default: ''
+  assign section_products_per_page = section.settings.products_per_page | default: 12
+
+-%}
+
+{%- style -%}
+
+  {%- if section_product_image_aspect_ratio_mobile and section_product_image_aspect_ratio_mobile != blank -%}
+    #{{ section_id }} .card-product__image,
+    #{{ section_id }} .card-product__image-link {
+      aspect-ratio: {{ section_product_image_aspect_ratio_mobile }};
+    }
+  {%- endif -%}
+
+  #{{ section_id }} .{{ section_name }}__grid {
+    gap: {{ section_grid_gap }}px;
+  }
+
+  @media screen and (min-width: 992px) {
+    {%- if section_product_image_aspect_ratio_desktop and section_product_image_aspect_ratio_desktop != blank -%}
+      #{{ section_id }} .card-product__image,
+      #{{ section_id }} .card-product__image-link {
+        aspect-ratio: {{ section_product_image_aspect_ratio_desktop }};
+      }
+    {%- endif -%}
+  }
+
+  {%
+    render 'element-styles',
+      background: section.settings.background,
+      background_image: section.settings.background_image,
+      background_image_position_desktop: section.settings.background_image_position_desktop,
+      background_image_position_mobile: section.settings.background_image_position_mobile,
+      background_image_repeat: section.settings.background_image_repeat,
+      background_image_size: section.settings.background_image_size,
+      border_bottom: section.settings.border_bottom,
+      border_top: section.settings.border_top,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top
+  -%}
+
+{%- endstyle -%}
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  {%- paginate collection.products by section_products_per_page -%}
+    {%- render 'bs-container', state: 'open', col: 'col-12', container: section_container -%}
+
+      <div class="{{ section_name }}__sort-filter">
+        <label class="{{ section_name }}__sort-filter-label">Sort by</label>
+        <select class="{{ section_name }}__sort-filter-options select--primary" id="sort-by">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {%- if option.value == collection_sort_by -%}selected="selected"{%- endif -%}>
+              {%- render 'sort-option-name', option_value: option.value -%}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+
+      <div class="{{ section_name }}__grid grid--{{ section_grid_columns }}" role="list">
+        {%- for item in collection.products -%}
+          {%- render 'card-product-grid', card_aria_role: 'listitem', card_product: item -%}
+        {%- endfor -%}
+      </div>
+
+      {%- capture snippet_classes -%}{{ section_name }}__pagination pagination{%- endcapture -%}
+      {%- render 'pagination', classes: snippet_classes, paginate: paginate -%}
+
+    {%- render 'bs-container', state: 'closed', col: 'col-12', container: section_container -%}
+  {%- endpaginate -%}
+</div>
+
+{%- javascript -%}
+
+  Shopify.queryParams = {};
+
+  // Preserve existing query parameters
+  if (location.search.length) {
+    var params = location.search.substr(1).split('&');
+    for (var i = 0; i < params.length; i++) {
+      var keyValue = params[i].split('=');
+      if (keyValue.length) {
+        Shopify.queryParams[decodeURIComponent(keyValue[0])] = decodeURIComponent(keyValue[1]);
+      }
+    }
+  }
+
+  // Update sort_by query parameter on select change
+  document.querySelector('#sort-by').addEventListener('change', function(e) {
+    Shopify.queryParams.sort_by = e.target.value;
+    location.search = new URLSearchParams(Shopify.queryParams).toString();
+  });
+
+{%- endjavascript -%}
+
+{%- schema -%}
+{
+  "name": "Collection Products",
+  "tag": "section",
+  "class": "section section--collection-products",
+  "templates": [
+    "collection"
+  ],
+  "settings": [
+    {
+      "content": "Settings",
+      "type": "header"
+    },
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+      "label": "Background",
+      "type": "select",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "Lemon", "value": "lemon" },
+        { "label": "Lime", "value": "lime" },
+        { "label": "Mango", "value": "mango" },
+        { "label": "None", "value": "none" },
+        { "label": "Orange", "value": "orange" },
+        { "label": "Strawberry", "value": "strawberry" }
+      ],
+      "default": "none",
+      "id": "background"
+    },
+    {
+      "label": "Background Image",
+      "type": "image_picker",
+      "id": "background_image"
+    },
+    {
+      "label": "Background Image Position (Mobile)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_mobile"
+    },
+    {
+      "label": "Background Image Position (Desktop)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_desktop"
+    },
+    {
+      "label": "Background Image Repeat",
+      "type": "select",
+      "options": [
+        { "label": "No Repeat", "value": "no-repeat" },
+        { "label": "Repeat", "value": "repeat" }
+      ],
+      "default": "repeat",
+      "id": "background_image_repeat"
+    },
+    {
+      "label": "Background Image Size",
+      "type": "select",
+      "options": [
+        { "label": "100px", "value": "100px" },
+        { "label": "200px", "value": "200px" },
+        { "label": "300px", "value": "300px" },
+        { "label": "400px", "value": "400px" },
+        { "label": "500px", "value": "500px" },
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
+      ],
+      "default": "cover",
+      "id": "background_image_size"
+    },
+    {
+      "content": "Border",
+      "type": "header"
+    },
+    {
+      "label": "Top Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_top"
+    },
+    {
+      "label": "Bottom Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_bottom"
+    },
+    {
+      "content": "Container",
+      "type": "header"
+    },
+    {
+      "label": "Container",
+      "type": "select",
+      "options": [
+        {  "label": "Static", "value": "container" },
+        { "label": "Fluid", "value": "container-fluid" },
+        { "label": "Full Width", "value": "full-width" }
+      ],
+      "default": "container",
+      "id": "container"
+    },
+    {
+      "content": "Grid",
+      "type": "header"
+    },
+    {
+      "label": "Grid Columns",
+      "type": "range",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "id": "grid_columns"
+    },
+    {
+      "label": "Grid Gap",
+      "type": "range",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 20,
+      "id": "grid_gap"
+    },
+    {
+      "content": "Padding",
+      "type": "header"
+    },
+    {
+      "label": "Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_top"
+    },
+    {
+      "label": "Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_bottom"
+    },
+    {
+      "content": "Product",
+      "type": "header"
+    },
+    {
+      "label": "Image Aspect Ratio (Mobile)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on smaller devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_mobile"
+    },
+    {
+      "label": "Image Aspect Ratio (Desktop)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on larger devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_desktop"
+    },
+    {
+      "label": "Products per Page",
+      "type": "range",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 12,
+      "id": "products_per_page"
+    }
+  ]
+}
+{%- endschema -%}

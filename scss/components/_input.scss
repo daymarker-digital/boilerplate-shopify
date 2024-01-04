@@ -1,0 +1,35 @@
+@use "../mixins/ui" as *;
+
+.input {
+
+  @extend %ui-base;
+  @extend %ui-transition;
+
+  &--primary,
+  &--secondary,
+  &--stepper {
+    @extend .input;
+  }
+
+  &--stepper {
+    font-size: 12px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 3px;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
+  }
+
+  &[disabled],
+  &.disabled {
+    @extend %ui-disabled;
+  }
+
+}

@@ -1,0 +1,121 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../variables' as *;
+@use "border" as *;
+@use "breakpoint" as *;
+@use "font" as *;
+@use "ui" as *;
+
+@mixin button-style( $style: '1' ) {
+
+  @each $name, $value in map.get( $theme-button-settings, 'font-sizes' ) {
+    @if $name == 'base' {
+      font-size: $value;
+    } @else {
+      @include breakpoint(#{$name}) {
+        font-size: $value;
+      }
+    }
+  }
+
+  @each $name, $value in map.get( $theme-button-settings, 'heights' ) {
+    @if $name == 'base' {
+      height: $value;
+    } @else {
+      @include breakpoint(#{$name}) {
+        height: $value;
+      }
+    }
+  }
+
+  @each $name, $value in map.get( $theme-button-settings, 'widths' ) {
+    @if $name == 'base' {
+      min-width: $value;
+    } @else {
+      @include breakpoint(#{$name}) {
+        min-width: $value;
+      }
+    }
+  }
+
+  @if $style == '1' or $style == 'primary' {
+    @include clarendon-wide(700);
+    text-transform: uppercase;
+    @each $name, $value in $theme-colours {
+      &.button--#{$name} {
+
+        $background: $value;
+        $background-hover: $value;
+        $colour: map.get( $theme-colours, 'white' );
+        $colour-hover: map.get( $theme-colours, 'white' );
+
+        @if $name == 'black' {
+          $background-hover: map.get( $theme-colours, 'yellow' );
+          $colour: map.get( $theme-colours, 'white' );
+          $colour-hover: map.get( $theme-colours, 'black' );
+        }
+
+        @if $name == 'blue' {
+          $background-hover: map.get( $theme-colours, 'yellow' );
+          $colour: map.get( $theme-colours, 'white' );
+          $colour-hover: map.get( $theme-colours, 'black' );
+        }
+
+        @if $name == 'red' {
+          $background-hover: map.get( $theme-colours, 'black' );
+          $colour: map.get( $theme-colours, 'white' );
+          $colour-hover: map.get( $theme-colours, 'white' );
+        }
+
+        @if $name == 'white' {
+          $background-hover: map.get( $theme-colours, 'yellow' );
+          $colour: map.get( $theme-colours, 'black' );
+          $colour-hover: map.get( $theme-colours, 'black' );
+        }
+
+        @if $name == 'yellow' {
+          $background-hover: map.get( $theme-colours, 'black' );
+          $colour: map.get( $theme-colours, 'black' );
+          $colour-hover: map.get( $theme-colours, 'white' );
+        }
+
+        background: $background;
+        color: $colour;
+
+        &:hover {
+          background: $background-hover;
+          color: $colour-hover;
+        }
+
+      }
+    }
+  }
+
+  @if $style == '2' or $style == 'secondary' {
+    @include border-solid( var(--theme-border-width), 'inherit' );
+    @include sarina(400);
+    @each $name, $value in $theme-colours {
+      &.button--#{$name} {
+
+        $background: transparent;
+        $background-hover: $value;
+        $border-color: $value;
+        $border-color-hover: $value;
+        $colour: $value;
+        $colour-hover: map.get( $theme-colours, 'white' );
+
+        background: $background;
+        border-color: $border-color;
+        color: $colour;
+
+        &:hover {
+          background: $background-hover;
+          border-color: $border-color-hover;
+          color: $colour-hover;
+        }
+
+      }
+    }
+  }
+
+}

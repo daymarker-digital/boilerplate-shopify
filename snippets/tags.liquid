@@ -1,0 +1,33 @@
+{%- if tags and tags.size > 0 -%}
+
+  {% assign snippet_name = 'tags' %}
+  {% assign snippet_classes = snippet_name %}
+
+  {% assign blog_handle = blog.handle | default: 'news' %}
+
+  {% if classes and classes != empty %}
+    {% assign snippet_classes = snippet_classes | prepend: ' ' | prepend: classes %}
+  {% endif %}
+
+  <nav class="{{ snippet_classes }}" role="navigation" aria-label="Article Tags">
+
+    {% if col and col != blank %}
+      {% render 'bs-container', state: 'open', col: col %}
+    {% endif %}
+
+    <div class="{{ snippet_name }}__layout">
+      <div class="{{ snippet_name }}__item label">Tags</div>
+      {% for tag in article.tags %}
+        <div class="{{ snippet_name }}__item">
+          <a class="{{ snippet_name }}__link link" href="/blogs/{{ blog_handle }}/tagged/{{ tag | handle }}" title="{{ tag }}" target="_self">{{ tag }}</a>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if col and col != blank %}
+      {% render 'bs-container', state: 'closed' %}
+    {% endif %}
+
+  </nav>
+
+{% endif %}

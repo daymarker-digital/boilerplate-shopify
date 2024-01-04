@@ -1,0 +1,18 @@
+.pagination {
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+
+  .active {}
+
+  .disabled {}
+
+  .link {
+    &:focus,
+    &:hover {}
+  }
+
+}

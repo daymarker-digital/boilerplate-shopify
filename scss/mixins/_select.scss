@@ -1,0 +1,15 @@
+@use 'sass:map';
+@use '../variables' as *;
+@use "breakpoint" as *;
+@use "font" as *;
+
+@mixin select-style( $style: 1 ) {
+
+  line-height: 1;
+
+  @if $style == 1 {
+    @include sorry-sans( 700 );
+    text-transform: uppercase;
+  }
+
+}

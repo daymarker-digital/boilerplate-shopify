@@ -1,0 +1,23 @@
+{%- liquid
+
+  assign snippet_name = 'policy'
+
+  assign snippet_container = policy_container | default: ''
+  assign snippet_content = policy_content | default: ''
+  assign snippet_title = policy_title | default: ''
+
+-%}
+
+<div class="{{ snippet_name }}__content">
+  {% render 'bs-container', state: 'open', col: 'col-12', container: snippet_container %}
+
+    {% if snippet_title and snippet_title != blank %}
+      <h1 class="{{ snippet_name }}__title heading--primary heading--2">{{ snippet_title }}</h1>
+    {% endif %}
+
+    {% if snippet_content and snippet_content != blank %}
+      <div class="{{ snippet_name }}__body-copy body-copy--primary body-copy--3">{{ snippet_content }}</div>
+    {% endif %}
+
+  {% render 'bs-container', state: 'closed', col: 'col-12', container: snippet_container %}
+</div>

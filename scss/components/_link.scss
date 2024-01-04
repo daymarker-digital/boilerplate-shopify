@@ -1,0 +1,18 @@
+@use '../mixins/ui' as *;
+
+.link {
+
+  @extend %ui-transition;
+  @extend %ui-base;
+
+  &--primary,
+  &--secondary {
+    @extend .link;
+  }
+
+  &[disabled],
+  &.disabled {
+    @extend %ui-disabled;
+  }
+
+}

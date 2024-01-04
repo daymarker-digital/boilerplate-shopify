@@ -1,0 +1,28 @@
+@use '../mixins/breakpoint' as *;
+
+.grid {
+
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr;
+
+  &--two-column,
+  &--three-column,
+  &--four-column {
+    @extend .grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include breakpoint(lg) {
+
+    &--three-column {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &--four-column {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+  }
+
+}

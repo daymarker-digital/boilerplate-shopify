@@ -1,0 +1,22 @@
+{
+  "name": "Cart",
+  "order": [
+    "hero",
+    "main",
+    "footer"
+  ],
+  "sections": {
+    "hero": {
+      "type": "main-cart-hero",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-cart-items",
+      "settings": {}
+    },
+    "footer": {
+      "type": "main-cart-footer",
+      "settings": {}
+    }
+  }
+}

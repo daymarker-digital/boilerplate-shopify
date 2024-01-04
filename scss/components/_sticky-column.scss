@@ -1,0 +1,49 @@
+@use "../mixins/breakpoint" as *;
+
+.sticky-column {
+
+  &__column {
+    width: 100%;
+    display: block;
+  }
+
+  &__container {
+    margin: auto;
+    width: 100%;
+  }
+
+  @include breakpoint(lg) {
+
+    &__column {
+      &--stuck {
+        height: auto;
+        min-height: 100%;
+        position: relative;
+        overflow-y: visible;
+        .sticky-column__content {
+          margin-top: calc( -1 * var(--theme-header-height--total) );
+          padding-top: calc( var(--theme-header-height--total) );
+        }
+        .sticky-column__main {
+          position: sticky;
+          height: 100vh;
+          top: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    &__content {
+      position: relative;
+    }
+
+    &__container {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: auto 38%;
+      gap: 32px;
+    }
+
+  }
+
+}

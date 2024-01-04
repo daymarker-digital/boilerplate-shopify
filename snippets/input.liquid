@@ -1,0 +1,62 @@
+{% comment %}
+
+  Accepts:
+    - classes: {String} Optionally include additional classes
+    - hidden: {Boolean} Conditionally hide input with css
+    - name: {String} Field name for input
+    - placeholder: {String} Placeholder text for input
+    - readonly: {Boolean} Conditionally assign readonly attribute
+    - required: {Boolean} Conditionally assign 'required' class
+    - type: {String} Optionally assign a type different than 'text'
+    - value: {String} Optionally prefill value attribute
+
+{% endcomment %}
+
+{% if name and name != blank %}
+
+  {%- liquid
+
+    assign snippet_name = 'input'
+    assign snippet_classes = snippet_name
+
+    assign classes = classes | default: ''
+    assign hidden = hidden | default: false
+    assign name = name | default: ''
+    assign placeholder = placeholder | default: ''
+    assign readonly = readonly | default: false
+    assign required = required | default: false
+    assign type = type | default: 'text'
+    assign value = value | default: ''
+
+    if classes and classes != blank
+      assign snippet_classes = snippet_classes | prepend: ' ' | prepend: classes | strip
+    endif
+
+    if hidden
+      assign snippet_classes = snippet_classes | append: ' d-none' | strip
+    endif
+
+    if required
+     assign snippet_classes = snippet_classes | append: ' required' | strip
+    endif
+
+  -%}
+
+  <input
+    class="{{- snippet_classes -}}"
+    type="{{- type -}}"
+    name="{{- name -}}"
+    autocomplete="{{- type -}}"
+    {% if value != blank %}value="{{- value -}}"{% endif %}
+    {% if placeholder != blank %}placeholder="{{- placeholder -}}"{% endif %}
+    {% if readonly %}readonly{% endif %}
+    {% case type %}
+      {% when 'email' %}
+        spellcheck="false"
+        autocapitalize="off"
+      {% when 'tel' %}
+        pattern="[0-9\-]*"
+    {% endcase %}
+  >
+
+{% endif %}

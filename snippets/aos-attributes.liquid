@@ -1,0 +1,73 @@
+{% comment %}
+
+  Use snippet like so...
+
+  /*
+  *  Note:
+  *  AOS library (https://www.npmjs.com/package/aos) needs to be installed
+  *  and initialized. JS and CSS files are required for anything to happen.
+  *
+  *  Timing:
+  *  Both delay and duration must be increments of 50
+  *
+  *  Bugs:
+  *  Offset and Mirror are buggy. Disable them for now.
+  */
+
+  {%
+    render 'aos-attributes',
+    anchor: 'my-great-div-id-here',
+    anchor_placement: 'top-bottom',
+    delay: 0,
+    duration: 1000,
+    easing: 'ease-in-out',
+    offset: 175,
+    once: 'false',
+    transition: 'fade-up',
+  %}
+
+  OR using Shopify's capture...
+
+  {% capture aos_attrs %}
+    {%
+      render 'aos-attributes',
+      anchor: 'some-unique-element-id-without-the-hash',
+      anchor_placement: 'top-bottom',
+      delay: 150,
+      duration: 1500,
+      easing: 'ease-in-out',
+      offset: 0,
+      once: 'true',
+      transition: 'fade-in',
+    %}
+  {% endcapture %}
+
+  <div class="my-div" {{ aos_attrs }}>Content to be animated</div>
+
+{% endcomment %}
+
+{%- liquid
+
+  assign anchor = anchor | default: ''
+  assign anchor_placement = anchor_placement | default: 'top-bottom'
+  assign delay = delay | default: 0
+  assign duration = duration | default: 450
+  assign easing = easing | default: 'ease-in-out'
+  assign offset = offset | default: 175
+  assign once = once | default: 'true'
+  assign transition = transition | default: 'fade-up'
+
+  assign html = 'data-aos="' | append: transition | append: '"'
+  if anchor != blank
+    assign html = html | append: ' data-aos-anchor="#' | append: anchor | append: '"'
+  endif
+  assign html = html | append: ' data-aos-anchor-placement="' | append: anchor_placement | append: '"'
+  assign html = html | append: ' data-aos-delay="' | append: delay | append: '"'
+  assign html = html | append: ' data-aos-duration="' | append: duration | append: '"'
+  assign html = html | append: ' data-aos-easing="' | append: easing | append: '"'
+  assign html = html | append: ' data-aos-offset="' | append: offset | append: '"'
+  assign html = html | append: ' data-aos-once="' | append: once | append: '"'
+
+-%}
+
+{{- html -}}

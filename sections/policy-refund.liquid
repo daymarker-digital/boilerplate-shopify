@@ -1,0 +1,191 @@
+{%- liquid
+
+  assign section_name = 'refund-policy'
+  assign section_classes = section_name
+  assign section_id = 'shopify-section-' | append: section.id
+  assign section_key = 'refund_policy'
+
+  assign section_container = 'container'
+  assign section_content = shop[section_key].body | default: ''
+  assign section_text_colour = section.settings.text_colour | default: 'dark'
+  assign section_title = shop[section_key].title | default: ''
+
+-%}
+
+{%- style -%}
+
+  #{{ section_id }} {
+    {% if 'dark' == section_text_colour %}
+      color: var(--theme-colour--black);
+    {% else %}
+      color: var(--theme-colour--lemon);
+    {% endif %}
+  }
+
+  {%-
+    render 'element-styles',
+      background: section.settings.background,
+      background_image: section.settings.background_image,
+      background_image_position_desktop: section.settings.background_image_position_desktop,
+      background_image_position_mobile: section.settings.background_image_position_mobile,
+      background_image_repeat: section.settings.background_image_repeat,
+      background_image_size: section.settings.background_image_size,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top
+  -%}
+
+{%- endstyle -%}
+
+<div class="{{ section_name }}__main text--{{ section_text_colour }}">
+  {% render 'policy-content', policy_container: 'container', policy_content: section_content, policy_title: section_title %}
+</div>
+
+{% schema %}
+{
+  "name": "Refund Policy",
+  "tag": "section",
+  "class": "section policy refund-policy",
+  "settings": [
+    {
+      "content": "Content",
+      "type": "header"
+    },
+    {
+      "content": "To change or update the content for this policy, log in to the Shopify dashboard and select Settings. From the Settings panel, choose Policies from the list of sub-panel options.",
+      "type": "paragraph"
+    },
+    {
+      "content": "Settings",
+      "type": "header"
+    },
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+      "label": "Background",
+      "type": "select",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "Lemon", "value": "lemon" },
+        { "label": "Lime", "value": "lime" },
+        { "label": "Mango", "value": "mango" },
+        { "label": "Orange", "value": "orange" },
+        { "label": "Strawberry", "value": "strawberry" }
+      ],
+      "default": "lemon",
+      "id": "background"
+    },
+    {
+      "label": "Background Image",
+      "type": "image_picker",
+      "id": "background_image"
+    },
+    {
+      "label": "Background Image Position (Mobile)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_mobile"
+    },
+    {
+      "label": "Background Image Position (Desktop)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_desktop"
+    },
+    {
+      "label": "Background Image Repeat",
+      "type": "select",
+      "options": [
+        { "label": "No Repeat", "value": "no-repeat" },
+        { "label": "Repeat", "value": "repeat" }
+      ],
+      "default": "no-repeat",
+      "id": "background_image_repeat"
+    },
+    {
+      "label": "Background Image Size",
+      "type": "select",
+      "options": [
+        { "label": "100px", "value": "100px" },
+        { "label": "200px", "value": "200px" },
+        { "label": "300px", "value": "300px" },
+        { "label": "400px", "value": "400px" },
+        { "label": "500px", "value": "500px" },
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
+      ],
+      "default": "cover",
+      "id": "background_image_size"
+    },
+    {
+      "content": "Padding",
+      "type": "header"
+    },
+    {
+      "label": "Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64,
+      "id": "padding_top"
+    },
+    {
+      "label": "Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 104,
+      "id": "padding_bottom"
+    },
+    {
+      "content": "Text",
+      "type": "header"
+    },
+    {
+      "label": "Text Colour",
+      "type": "select",
+      "options": [
+        { "label": "Dark", "value": "dark" },
+        { "label": "Light", "value": "light" }
+      ],
+      "default": "dark",
+      "id": "text_colour"
+    }
+  ]
+}
+{% endschema %}

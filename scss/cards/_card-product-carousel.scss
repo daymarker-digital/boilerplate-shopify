@@ -1,0 +1,158 @@
+@use "../mixins/border" as *;
+@use "../mixins/breakpoint" as *;
+
+.card-product-carousel {
+
+  $title-font-size: 32px;
+
+  &__content {
+    margin-top: 28px;
+  }
+
+  &__cta {
+    margin-top: 20px;
+    &-link {
+      width: 170px;
+      margin: auto;
+      display: block;
+    }
+  }
+
+  &__media {
+    @include border-solid( var(--theme-border--width), 'black' );
+    border-radius: var(--theme-border--radius);
+    overflow: hidden;
+    position: relative;
+    &-image-hover {
+      transition:
+        opacity var(--theme-transition--duration),
+        transform calc( 7 * var(--theme-transition--duration));
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    &-link {
+      &:hover {
+        .card-product-carousel__media-image-hover {
+          opacity: 1;
+          transform: scale( 1.05, 1.05 );
+        }
+      }
+    }
+  }
+
+  &__note {
+    font-size: $title-font-size * 0.5625;
+  }
+
+  &__title {
+    font-size: $title-font-size;
+    & + .card-product-carousel__note {
+      margin-top: 4px;
+    }
+  }
+
+  @include breakpoint(sm) {
+
+    $title-font-size: 37px;
+
+    &__cta {
+      &-link {
+        width: 190px;
+      }
+    }
+
+    &__note {
+      font-size: $title-font-size * 0.5625;
+    }
+
+    &__title {
+      font-size: $title-font-size;
+    }
+
+  }
+
+  @include breakpoint(md) {
+
+    $title-font-size: 32px;
+
+    &__cta {
+      &-link {
+        width: 180px;
+      }
+    }
+
+    &__note {
+      font-size: $title-font-size * 0.5625;
+    }
+
+    &__title {
+      font-size: $title-font-size;
+    }
+
+  }
+
+  @include breakpoint(lg) {
+
+    $title-font-size: 30px;
+
+    &__cta {
+      &-link {
+        width: 170px;
+      }
+    }
+
+    &__note {
+      font-size: $title-font-size * 0.5625;
+    }
+
+    &__title {
+      font-size: $title-font-size;
+    }
+
+  }
+
+  @include breakpoint(xl) {
+
+    $title-font-size: 32px;
+
+    &__cta {
+      &-link {
+        width: 180px;
+      }
+    }
+
+    &__note {
+      font-size: $title-font-size * 0.5625;
+    }
+
+    &__title {
+      font-size: $title-font-size;
+    }
+
+  }
+
+  @include breakpoint(xxl) {
+
+    $title-font-size: 34px;
+
+    &__cta {
+      &-link {
+        width: 190px;
+      }
+    }
+
+    &__note {
+      font-size: $title-font-size * 0.5625;
+    }
+
+    &__title {
+      font-size: $title-font-size;
+    }
+
+  }
+
+}

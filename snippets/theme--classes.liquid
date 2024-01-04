@@ -1,0 +1,36 @@
+{%- liquid
+
+	assign theme_classes = ''
+
+	if template.name != blank
+		assign theme_classes = theme_classes | append: template.name
+		assign theme_classes = theme_classes | append: ' template--' | append: template.name
+		if template.suffix
+			assign theme_classes = theme_classes | append: ' ' | append: template.name | append: '--' | append: template.suffix
+		else
+			assign theme_classes = theme_classes | append: ' ' | append: template.name | append: '--default'
+		endif
+	endif
+
+	if include_template_suffix and template.suffix
+		assign theme_classes = theme_classes | append: ' ' | append: template.suffix
+	endif
+
+	if template.directory != blank
+		assign theme_classes = theme_classes | append: ' template--' | append: template.directory
+		assign theme_classes = theme_classes | append: ' ' | append: template.directory
+	endif
+
+	if customer
+		assign theme_classes = theme_classes | append: ' customer-logged-in'
+	endif
+
+	if settings.announcement--enable
+		assign theme_classes = theme_classes | append: ' announcement-enabled'
+	endif
+
+  assign theme_classes = theme_classes | append: ' ' | append: request.page_type
+
+-%}
+
+{{- theme_classes -}}

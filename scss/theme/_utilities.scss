@@ -1,0 +1,76 @@
+@use "sass:map";
+@use '../variables' as *;
+@use '../mixins/font' as *;
+
+.position {
+  &--fixed {
+    position: fixed;
+    width: 100%;
+  }
+}
+
+.text {
+
+  // ---------------------------------------- Alignment
+  &--align-left {
+    text-align: left;
+  }
+
+  &--align-center {
+    text-align: center;
+  }
+
+  &--align-right {
+    text-align: right;
+  }
+
+  // ---------------------------------------- Case
+  &--uppercase {
+    text-transform: uppercase;
+  }
+
+  // ---------------------------------------- Colour
+  @each $name, $value in $theme-colours {
+    &--#{$name} {
+      color: var(--theme-colour--#{$name});
+    }
+  }
+  &--dark {
+    color: var(--theme-colour--black);
+  }
+  &--light {
+    color: var(--theme-colour--white);
+  }
+
+  // ---------------------------------------- Style
+  &--primary {
+    //@include hobeaux( 700 );
+  }
+
+  &--secondary {
+    //@include sorry-sans( 700 );
+  }
+
+  // ---------------------------------------- Weight
+  @for $i from 1 through 9 {
+    $weight: $i * 100;
+    &--#{$weight} {
+     font-weight: $weight;
+    }
+  }
+
+}
+
+.z-index {
+
+  $base: 0;
+	$step: 50;
+
+  @while $base < 1000 {
+    &--#{$base} {
+      z-index: $base;
+    }
+    $base: $base + $step;
+  }
+
+}

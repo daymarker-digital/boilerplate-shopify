@@ -1,0 +1,31 @@
+{%- if accordion_content and accordion_content != blank and accordion_title and accordion_title != blank -%}
+
+  {% comment %}
+    Renders a Bootstrap accordion/collapsible block
+
+    Accepts:
+    - accordion_content: {String} Content for accordion
+    - accordion_id: {String} Unique ID for accordion
+    - accordion_open: {Boolean} Conditionally control open state of accordion
+    - accordion_title: {String} Title of accordion
+
+    Usage:
+    {%-
+      render 'bs-accordion',
+        accordion_content: faq_answer,
+        accordion_id: faq_id,
+        accordion_title: faq_title
+    -%}
+  {% endcomment %}
+
+  <button class="accordion__trigger button button--accordion{% unless accordion_open %} collapsed{% endunless %}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ accordion_id }}" aria-expanded="{% if accordion_open %}true{% else %}false{% endif %}" aria-controls="{{ accordion_id }}">
+    <span class="accordion__trigger-title text--align-left text--primary text--uppercase">{{ accordion_title }}</span>
+    <span class="accordion__trigger-icon"></span>
+  </button>
+  <div class="accordion__main collapse{% if accordion_open %} show{% endif %}" id="{{ accordion_id }}">
+    <div class="accordion__main-content text--secondary text--uppercase body-copy--3">
+      {{ accordion_content }}
+    </div>
+  </div>
+
+{% endif %}

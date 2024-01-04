@@ -1,0 +1,33 @@
+@use "../mixins/button" as *;
+@use "../mixins/button-close" as *;
+@use "../mixins/ui" as *;
+
+.button {
+
+  @extend %ui-base;
+  @extend %ui-transition;
+
+  &--close,
+  &--primary,
+  &--secondary {
+    @extend .button;
+  }
+
+  &--close {
+    @include button-close( $size: 18px, $colour: "black" );
+  }
+
+  &--primary {
+    @include button-style( 'primary' );
+  }
+
+  &--secondary {
+    @include button-style( 'secondary' );
+  }
+
+  &[disabled],
+  &.disabled {
+    @extend %ui-disabled;
+  }
+
+}

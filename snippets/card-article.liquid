@@ -1,0 +1,56 @@
+{%- if card_article and card_article != blank %}
+
+  {%- liquid
+
+    comment
+      Accepts:
+        - card_article: {Object} Article Liquid object
+        - classes: {String} Optionally include additional classes
+        - id: {String} Optionally include a unique ID
+        - style: {String} Optionally load different card types by passing style option
+    endcomment
+
+    assign snippet_name = 'card-article'
+    assign snippet_classes = snippet_name | append: ' article'
+    assign snippet_id = id | default: 'card-article--' | append: card_article.id
+    assign style = style | default: 'not-set'
+
+    if classes and classes != empty
+      assign snippet_classes = snippet_classes | prepend: ' ' | prepend: classes
+    endif
+
+    assign aos_id = snippet_id | append: '--aos'
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+
+    assign author = card_article.author | default: ''
+    assign date_published = card_article.published_at
+    assign images = card_article.image | default: false
+    assign title = card_article.title | default: ''
+    assign url = card_article.url | default: ''
+
+  -%}
+
+  <article class="{{ snippet_classes }}" id="{{ snippet_id }}" data-published-at="{{ date_published | date: "%Y-%m-%d %H:%M:%S" }}" data-style="{{ style }}">
+    <div class="{{ snippet_name }}__layout" id="{{ aos_id }}">
+
+      {% case style %}
+        {% when 'featured' %}
+        {% else %}
+          <div class="{{ snippet_name }}__image">
+            <a class="{{ snippet_name }}__image-link" href="{{ url }}" title="{{ title }}" target="_self">
+              {% render 'lazyload-image', image: image %}
+            </a>
+          </div>
+          <div class="{{ snippet_name }}__content">
+            <time class="{{ snippet_name }}__date" datetime="{{ date_published | date: "%Y-%m-%d" }}">{{ date_published | date: "%B %e, %Y" }}</time>
+            <strong class="{{ snippet_name }}__title">
+              <a class="{{ snippet_name }}__title-link" href="{{ url }}" title="{{ title }}" target="_self">{{ title }}</a>
+            </strong>
+          </div>
+      {% endcase %}
+
+    </div>
+  </article>
+
+{%- endif -%}

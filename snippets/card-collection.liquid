@@ -1,0 +1,97 @@
+{%- if card_collection and card_collection != blank -%}
+
+  {% comment %}
+      Renders a collection card
+
+      Accepts:
+      - card_aria_role: {String} Optionally include aria role
+      - card_classes: {String} Optionally include custom classes
+      - card_collection: {Object} Product object
+
+      Usage:
+      {%-
+        render 'card-product-grid',
+          card_aria_role: 'listitem',
+          card_collection: block.settings.collection
+      -%}
+  {% endcomment %}
+
+   {%- liquid
+
+    assign snippet_name = 'card-collection'
+    assign snippet_classes = card_classes | default: snippet_name
+    assign snippet_id = snippet_name | append: '--' | append: card_collection.id
+
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+    assign aos_id = snippet_id
+
+    assign snippet_aria_role = card_aria_role | default: ''
+    assign snippet_collection = card_collection | default: false
+    assign snippet_collection_description = card_collection.description | default: ''
+    assign snippet_collection_featured_image = snippet_collection.featured_image | default: false
+    assign snippet_collection_title = snippet_collection.title | default: ''
+    assign snippet_collection_url = snippet_collection.url | default: ''
+    assign snippet_heading_size = card_heading_size | default: 'md'
+    assign snippet_message_size = card_message_size | default: 'sm'
+
+  -%}
+
+  <article class="{{ snippet_classes }}" id="{{ snippet_id }}" {% if snippet_aria_role != blank %}role="{{ snippet_aria_role }}"{% endif %}>
+    <div class="{{ snippet_name }}__main fifty-fifty__main text--uppercase">
+      <div class="{{ snippet_name }}__item fifty-fifty__item image">
+        <div class="{{ snippet_name }}__content fifty-fifty__content">
+          {% if snippet_collection_featured_image %}
+            {%- liquid
+              capture aos_attrs
+                render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+              endcapture
+              assign aos_delay = aos_delay | plus: aos_delay_increment
+            -%}
+            <div class="{{ snippet_name }}__image fifty-fifty__image" {{ aos_attrs }}>
+              {% if snippet_collection_url != blank %}<a class="{{ snippet_name }}__image-link link" href="{{ snippet_collection_url }}" target="_self" snippet_collection_title="{{ snippet_collection_title }}">{% endif %}
+                {% render 'lazyload-image', alt_text: snippet_collection_title, image: snippet_collection_featured_image %}
+              {% if snippet_collection_url != blank %}</a>{% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="{{ snippet_name }}__item fifty-fifty__item text">
+        <div class="{{ snippet_name }}__content fifty-fifty__content">
+          {% if snippet_collection_title != blank %}
+            {%- liquid
+              capture aos_attrs
+                render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+              endcapture
+              assign aos_delay = aos_delay | plus: aos_delay_increment
+            -%}
+            <h2 class="{{ snippet_name }}__heading fifty-fifty__heading heading--primary heading--{{ snippet_heading_size }}-fluid" {{ aos_attrs }}>{{ snippet_collection_title }}</h2>
+          {% endif %}
+          {% if snippet_collection_description != blank %}
+            {%- liquid
+              capture aos_attrs
+                render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+              endcapture
+              assign aos_delay = aos_delay | plus: aos_delay_increment
+            -%}
+            <div class="{{ snippet_name }}__message fifty-fifty__message body-copy--primary body-copy--{{ snippet_message_size }}-fluid" {{ aos_attrs }}>{{ snippet_collection_description }}</div>
+          {% endif %}
+          {% if snippet_collection_url != blank %}
+            {%- liquid
+              capture aos_attrs
+                render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-up'
+              endcapture
+              assign aos_delay = aos_delay | plus: aos_delay_increment
+            -%}
+            <div class="{{ snippet_name }}__cta fifty-fifty__cta" {{ aos_attrs }}>
+              <a class="{{ snippet_name }}__cta-button fifty-fifty__cta-button button button--svg" href="{{ snippet_collection_url }}" target="_self" title="{{ snippet_collection_url_title }}">
+                {% render 'svg', type: 'button.shop-now' %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </article>
+
+{% endif %}

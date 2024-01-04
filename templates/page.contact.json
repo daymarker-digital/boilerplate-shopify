@@ -1,0 +1,17 @@
+{
+  "name": "Contact Page",
+	"order": [
+    "main",
+    "contact"
+  ],
+	"sections": {
+		"main": {
+      "type": "main-page",
+			"settings": {}
+		},
+    "contact": {
+      "type": "contact-form",
+			"settings": {}
+		}
+	}
+}

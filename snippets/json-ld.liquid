@@ -1,0 +1,87 @@
+<script type="application/ld+json">
+  {%- if article and article != empty -%}
+    {
+      "@context": "http://schema.org",
+      "@type": "Article",
+      "articleBody": {{ article.content | strip_html | json }},
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": {{ request.origin | append: page.url | json }}
+      },
+      "headline": {{ article.title | json }},
+      {% if article.excerpt != blank %}
+        "description": {{ article.excerpt | strip_html | json }},
+      {% endif %}
+      {% if article.image %}
+        {% assign image_size = article.image.width | append: 'x' %}
+        "image": [
+          {{ article | img_url:image_size | prepend: "https:" | json }}
+        ],
+      {% endif %}
+      "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+      "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+      "author": {
+        "@type": "Person",
+        "name": {{ article.author | json }}
+      },
+      "publisher": {
+        "@type": "Organization",
+        {% if settings.share_image %}
+          {% assign image_size = settings.share_image.width | append: 'x' %}
+          "logo": {
+            "@type": "ImageObject",
+            "height": {{ settings.share_image.height | json }},
+            "url": {{ settings.share_image | img_url:image_size | prepend: "https:" | json }},
+            "width": {{ settings.share_image.width | json }}
+          },
+        {% endif %}
+        "name": {{ shop.name | json }}
+      }
+    }
+  {% endif %}
+  {% if product and product != empty %}
+
+    {%- liquid
+      if product.selected_or_first_available_variant.featured_media
+        assign seo_media = product.selected_or_first_available_variant.featured_media
+      else
+        assign seo_media = product.featured_media
+      endif
+    -%}
+
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ request.origin | append: product.url | json }},
+      {% if seo_media -%}
+        {%- assign media_size = seo_media.preview_image.width | append: 'x' -%}
+        "image": [
+          {{ seo_media | img_url: media_size | prepend: "https:" | json }}
+        ],
+      {%- endif %}
+      "description": {{ product.description | strip_html | json }},
+      {% if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+      {%- endif %}
+      "brand": {
+        "@type": "Thing",
+        "name": {{ product.vendor | json }}
+      },
+      "offers": [
+        {%- for variant in product.variants -%}
+          {
+            "@type" : "Offer",
+            {%- if variant.sku != blank -%}
+              "sku": {{ variant.sku | json }},
+            {%- endif -%}
+            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "price" : {{ variant.price | divided_by: 100.00 | json }},
+            "priceCurrency" : {{ cart.currency.iso_code | json }},
+            "url" : {{ request.origin | append: variant.url | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  {% endif %}
+</script>

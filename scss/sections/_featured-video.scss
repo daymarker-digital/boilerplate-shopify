@@ -1,0 +1,44 @@
+@use "../mixins/breakpoint" as *;
+
+.featured-video {
+
+  &__embed,
+  &__placholder-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+
+  &__embed {
+    z-index: 0;
+  }
+
+  &__placholder-image {
+    z-index: 10;
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__main {
+    width: 100%;
+    height: auto;
+    position: relative;
+    &.lazyloaded {
+      .featured-video__placholder-image {
+        opacity: 0;
+        z-index: 0;
+      }
+      .featured-video__embed {
+        z-index: 10;
+      }
+    }
+  }
+
+}

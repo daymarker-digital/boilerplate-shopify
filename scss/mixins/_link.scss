@@ -1,0 +1,12 @@
+@use "ui" as *;
+
+@mixin link( $style: 1 ) {
+
+  @extend %ui-transition;
+  @extend %ui-base;
+
+  @if $style == 1 {}
+
+  @if $style == 2 {}
+
+}

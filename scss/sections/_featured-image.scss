@@ -1,0 +1,9 @@
+@use "../mixins/general" as *;
+
+.featured-image {
+
+  &__layout {
+    position: relative;
+  }
+
+}

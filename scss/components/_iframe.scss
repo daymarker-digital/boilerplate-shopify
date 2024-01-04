@@ -1,0 +1,22 @@
+.iframe {
+
+  position: relative;
+  width: 100%;
+  display: block;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .post-type--post & {
+    iframe {
+      border-radius: var(--theme-post-media-border-radius);
+    }
+  }
+
+}

@@ -1,0 +1,27 @@
+.announcements {
+
+  &__button {
+    &-close {
+      position: absolute;
+    }
+  }
+
+  &__item {
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+  }
+
+  &__main {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+  }
+
+  &.position--fixed {
+    top: 0;
+  }
+
+}

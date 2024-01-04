@@ -1,0 +1,409 @@
+{%- liquid
+
+  assign section_name = 'product-recommendations'
+  assign section_classes = section_name | append: ' section-' | append: section.id | append: '-padding'
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign aos_id = section_id | append: '--aos'
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+
+  assign container = section.settings.container | default: 'container'
+  assign heading = section.settings.heading | append: ''
+  assign product_limit = section.settings.product_limit | default: 3
+  assign subheading = section.settings.subheading | append: ''
+
+-%}
+
+{%
+  render 'section-styles',
+  background: section.settings.background,
+  id: section.id,
+  padding_bottom: section.settings.padding_bottom
+  padding_top: section.settings.padding_top,
+%}
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  {% render 'bs-container', state: 'open', container: container %}
+
+    <div class="{{ section_name }}__layout">
+
+      {% if heading != blank or subheading != blank %}
+        <div class="{{ section_name }}__content">
+          {% if heading != blank %}<strong class="{{ section_name }}__heading heading--1">{{ heading }}</strong>{% endif %}
+          {% if subheading != blank %}<strong class="{{ section_name }}__subheading heading--2">{{ subheading }}</strong>{% endif %}
+        </div>
+      {% endif %}
+
+      <div class="{{ section_name }}__main" id="{{ section_name }}__main" data-product-limit="{{ product_limit }}">
+        <!-- Inject Ajax Recommended Products Here -->
+      </div>
+
+    </div>
+
+  {% render 'bs-container', state: 'closed', container: container %}
+</div>
+
+<script>
+
+  let sectionName = {{ section_name | json }};
+  let html, is_glider;
+  let productID = {{ product.id | json }};
+  let limit = {{ product_limit | json }};
+  let recommendedGlider = {
+    interval: null,
+    id: {{ glider_id | json }},
+    glider: {}
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    recommendedProducts();
+  }, false);
+
+  function recommendedProducts() {
+    fetch(window.Shopify.routes.root + `recommendations/products.json?product_id=${productID}&limit=${limit}`)
+      .then(response => response.json())
+      .then(({ products }) => {
+        console.log( 'recommendedProducts ::', products );
+        if (products.length > 0) {
+          document.getElementById(`${sectionName}__main`).innerHTML = renderGliderMarkup(products);
+          initializeGlider();
+        }
+      }
+    );
+  };
+
+  function renderGliderMarkup( products = [] ) {
+    return `
+      <div class="glide" id="${recommendedGlider.id}" data-glide-style="recommended-products">
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            ${products.map(product =>
+              `<li class="glide__slide">
+                <div class="${sectionName}__item">
+                  ${renderProductCardMarkup(product)}
+                </div>
+              </li>`
+            ).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+  };
+
+  function renderProductCardMarkup( product = {} ) {
+
+    let featuredImage = {
+      small: Theme.tools.imgURLFilter(product.featured_image, 'icon'),
+      large: Theme.tools.imgURLFilter(product.featured_image, 'large')
+    };
+    let handle = product.handle;
+    let title = product.title;
+
+    return `
+      <article class="card-product card-product--${sectionName} product">
+        <div class="card-product__featured-image product__featured-image">
+          <a class="card-product__featured-image-link link" href="/products/${handle}" title="${title}" target="_self">
+            <img class="lazyload-item lazyload-item--image lazypreload lazyload-item--inline inline lazyautosizes lazyload" src="${featuredImage.small}" data-src="${featuredImage.large}" alt="${title}" />
+          </a>
+        </div>
+        <div class="card-product__info">
+          <strong class="card-product__title caption--2">
+            <a class="card-product__title-link link" href="/products/${handle}" title="${title}" target="_self">${title}</a>
+          </strong>
+          <div class="card-product__price caption--2">${renderProductPrice(product)}</div>
+        </div>
+      </article>
+    `;
+
+  };
+
+  function renderProductPrice( product = {} ) {
+
+    let price = product.price || 0;
+    let price_compare = product.compare_at_price || 0;
+
+    return `
+      <div class="price${ price_compare ? ' with-sale-price' : '' }">
+        <span class="price__value"><span class="price__currency-symbol">$</span>${(price/100).toFixed(2)}</span>
+        <span class="price__value sale-price"><span class="price__currency-symbol">$</span>${(price_compare/100).toFixed(2)}</span>
+      </div>
+    `;
+
+  };
+
+  function initializeGlider() {
+
+    recommendedGlider.glider = new Glide( `#${recommendedGlider.id}`, {
+      animationTimingFunc: 'ease-in-out',
+      animationDuration: 280,
+      autoplay: 3200,
+      breakpoints: {
+        9999: {
+          // up to 1200
+          focusAt: 'center',
+          gap: 32,
+          peek: { before: 64, after: 64 },
+          perView: 4,
+        },
+        1399: {
+          // up to 992
+          focusAt: 'center',
+          gap: 32,
+          peek: { before: 64, after: 64 },
+          perView: 3,
+        },
+        991: {
+          // up to 992
+          focusAt: 'center',
+          gap: 32,
+          peek: { before: 64, after: 64 },
+          perView: 2,
+        },
+        767: {
+          // up to 576
+          focusAt: 'center',
+          gap: 32,
+          peek: { before: 64, after: 64 },
+          perView: 1,
+        },
+      },
+      gap: 32,
+      peek: 0,
+      hoverpause: true,
+      type: 'carousel',
+      rewind: true,
+      throttle: 50
+    });
+
+    recommendedGlider.glider.on( 'mount.after', function(event) {
+      setTimeout( function() {
+        recommendedGlider.glider.update();
+      }, 250 );
+    });
+
+    ( document.querySelectorAll(`[data-target="#${recommendedGlider.id}"].next`) || [] ).forEach( button => {
+      button.addEventListener('click', function () {
+        recommendedGlider.glider.go('>');
+      });
+    });
+
+    ( document.querySelectorAll(`[data-target="#${recommendedGlider.id}"].prev`) || [] ).forEach( button => {
+      button.addEventListener('click', function () {
+        recommendedGlider.glider.go('<');
+      });
+    });
+
+    recommendedGlider.glider.mount();
+
+  };
+
+  function initializeGliderWithInterval() {
+
+    console.log('initializeGliderWithInterval :: Initialized');
+
+    recommendedGlider.interval = setInterval( function() {
+
+      if ( document.getElementById(recommendedGlider.id) ) {
+
+        clearInterval(recommendedGlider.interval);
+
+        recommendedGlider.glider = new Glide( `#${recommendedGlider.id}`, {
+          animationTimingFunc: 'ease-in-out',
+          animationDuration: 280,
+          autoplay: 3200,
+          breakpoints: {
+            1199: {
+              // up to 1200
+              focusAt: 'center',
+              gap: 42,
+              peek: 0,
+              perView: 6,
+            },
+            991: {
+              // up to 992
+              focusAt: 'center',
+              gap: 32,
+              peek: 0,
+              perView: 5,
+            },
+            767: {
+              // up to 768
+              focusAt: 'center',
+              gap: 32,
+              peek: { before: 55, after: 55 },
+              perView: 4,
+            },
+            575: {
+              // up to 576
+              focusAt: 'center',
+              gap: 32,
+              peek: { before: 35, after: 35 },
+              perView: 3,
+            },
+            400: {
+              // up to 576
+              focusAt: 'center',
+              gap: 32,
+              peek: { before: 15, after: 15 },
+              perView: 1,
+            },
+          },
+          gap: 32,
+          peek: 0,
+          hoverpause: true,
+          type: 'carousel',
+          rewind: true,
+          throttle: 50
+        });
+
+        recommendedGlider.glider.on( 'mount.after', function(event) {
+          setTimeout( function() {
+            recommendedGlider.glider.update();
+          }, 250 );
+        });
+
+        ( document.querySelectorAll(`[data-target="#${recommendedGlider.id}"].next`) || [] ).forEach( button => {
+          button.addEventListener('click', function () {
+            recommendedGlider.glider.go('>');
+          });
+        });
+
+        ( document.querySelectorAll(`[data-target="#${recommendedGlider.id}"].prev`) || [] ).forEach( button => {
+          button.addEventListener('click', function () {
+            recommendedGlider.glider.go('<');
+          });
+        });
+
+        recommendedGlider.glider.mount();
+
+      }
+
+    }, 100);
+
+    console.log('initializeGliderWithInterval :: Finished');
+
+  };
+
+</script>
+
+{% schema %}
+  {
+    "name": "Product Recommendations",
+    "tag": "section",
+    "class": "section section--product-recommendations",
+    "settings": [
+      {
+        "content": "Content",
+        "type": "header"
+      },
+      {
+        "label": "Heading",
+        "type": "text",
+        "id": "heading"
+      },
+      {
+        "label": "Subheading",
+        "type": "text",
+        "id": "subheading"
+      },
+      {
+        "label": "Max number of recommended products",
+        "type": "range",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "default": 3,
+        "id": "product_limit"
+      },
+      {
+			  "content": "Layout",
+			  "type": "header"
+		  },
+      {
+		    "label": "Background",
+		    "type": "select",
+		    "options": [
+          { "label": "Black", "value": "black" },
+			    { "label": "White", "value": "white" }
+		    ],
+		    "default": "white",
+		    "id": "background"
+		  },
+      {
+        "label": "Container",
+        "type": "select",
+        "options": [
+          { "label": "Static", "value": "container" },
+          { "label": "Fluid", "value": "container-fluid" },
+          { "label": "Full Width", "value": "full-width" }
+        ],
+        "default": "container",
+        "id": "container"
+      },
+      {
+			  "content": "Grid",
+			  "type": "header"
+		  },
+      {
+        "label": "Grid Layout",
+        "type": "select",
+        "options": [
+          { "value": "two-column", "label": "Two Column" },
+          { "value": "three-column", "label": "Three Column" }
+        ],
+        "default": "two-column",
+        "id": "grid_layout"
+      },
+      {
+        "label": "Grid Gutter",
+			  "type": "range",
+			  "min": 0,
+			  "max": 100,
+			  "step": 2,
+			  "default": 20,
+        "id": "grid_gutter"
+      },
+      {
+			  "content": "Padding",
+			  "type": "header"
+		  },
+		  {
+			  "label": "Top Padding",
+			  "type": "range",
+			  "min": 0,
+			  "max": 120,
+			  "step": 4,
+			  "unit": "px",
+			  "default": 36,
+        "id": "padding_top"
+		  },
+		  {
+			  "label": "Bottom Padding",
+			  "type": "range",
+			  "min": 0,
+			  "max": 120,
+			  "step": 4,
+			  "unit": "px",
+			  "default": 36,
+        "id": "padding_bottom"
+		  },
+      {
+			  "content": "Anchor",
+			  "type": "header"
+		  },
+      {
+        "label": "Anchor ID",
+        "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+        "type": "text",
+        "id": "anchor_id"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Recommendations"
+      }
+    ],
+    "templates": [ "product" ]
+  }
+{% endschema %}

@@ -1,0 +1,26 @@
+{%- liquid
+
+  assign snippet_name = 'stepper'
+  assign snippet_classes = stepper_classes | default: snippet_name
+  assign stepper_value = stepper_value | default: 1
+  assign stepper_max = stepper_max | default: 9999
+
+-%}
+
+<div class="{{ snippet_classes }}">
+
+  <button class="{{ snippet_name }}__button button--stepper decrease js--stepper-button" aria-label="Decrease" type="button" {% unless stepper_value > 1 %}disabled{% endunless %}>
+    <span class="{{ snippet_name }}__button-icon button__icon">
+      {% render 'svg-icon', type: 'chevron' %}
+    </span>
+  </button>
+
+  <input class="{{ snippet_name }}__input input--stepper js--stepper-input" type="number" name="quantity" min="1" max="{{ stepper_max }}" value="{{ stepper_value }}" readonly>
+
+  <button class="{{ snippet_name }}__button button--stepper increase js--stepper-button" aria-label="Increase" type="button" {% if stepper_value == stepper_max %}disabled{% endif %}>
+    <span class="{{ snippet_name }}__button-icon button__icon">
+      {% render 'svg-icon', type: 'chevron' %}
+    </span>
+  </button>
+
+</div>

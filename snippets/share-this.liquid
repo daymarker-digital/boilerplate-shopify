@@ -1,0 +1,60 @@
+{% comment %}
+
+  Use snippet like so...
+
+  {%
+    render 'share-this',
+    title: 'My amazing article that I wrote'
+  %}
+
+  $display = "page";
+  $share_url = 'https://www.facebook.com/dialog/share?app_id=' . $app_id . '&display=' . $display . '&href=' . $encoded_permalink . '&redirect_uri=' . $encoded_permalink;
+
+{% endcomment %}
+
+{%- if title and title != blank -%}
+
+  {% assign snippet_name = 'share-this' %}
+  {% assign snippet_classes = snippet_name %}
+
+  {% if classes and classes != empty %}
+    {% assign snippet_classes = snippet_classes | prepend: ' ' | prepend: classes %}
+  {% endif %}
+
+  {% assign facebook_app_id = false %}
+  {% assign twitter_account = 'optimi' %}
+
+  {% assign shareable_url = canonical_url %}
+
+  <nav class="{{ snippet_classes }}" role="navigation" aria-label="Shareable Links">
+
+    {% if col and col != blank %}
+      {% render 'bs-container', state: 'open', col: col %}
+    {% endif %}
+
+    <div class="{{ snippet_name }}__layout">
+
+      <div class="{{ snippet_name }}__item label">Share</div>
+
+      <div class="{{ snippet_name }}__item facebook">
+        <a class="{{ snippet_name }}__link link" href="http://www.facebook.com/sharer/sharer.php?u={{ shareable_url | url_encode }}&t={{ title | url_encode }}" target="_blank" rel="noopener" title="Share on Facebook"
+        >FB</a>
+      </div>
+
+      <div class="{{ snippet_name }}__item twitter">
+        <a class="{{ snippet_name }}__link link" href="https://twitter.com/intent/tweet?url={{ shareable_url | url_encode }}&via={{ twitter_account }}" target="_blank" rel="noopener" title="Share on Twitter">TW</a>
+      </div>
+
+      <div class="{{ snippet_name }}__item email">
+        <a class="{{ snippet_name }}__link link" href="mailto:?subject=Check out: {{ title }} by {{ shop.name }}&body=The full article is availale here {{ shareable_url }}." target="_blank" rel="noopener" title="Share via Email">EMAIL</a>
+      </div>
+
+    </div>
+
+    {% if col and col != blank %}
+      {% render 'bs-container', state: 'closed' %}
+    {% endif %}
+
+  </div>
+
+{% endif %}

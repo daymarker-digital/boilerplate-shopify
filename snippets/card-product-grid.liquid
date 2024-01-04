@@ -1,0 +1,134 @@
+{%- if card_product and card_product != blank -%}
+
+  {% comment %}
+    Renders a product grid card
+
+    Accepts:
+    - card_aria_role: {String} Optionally include aria role
+    - card_background: {Object} Optionally include background colour
+    - card_product: {Object} Product object
+
+    Usage:
+    {%-
+      render 'card-product-grid',
+        card_aria_role: 'listitem',
+        card_background: 'mango'
+        card_product: block.settings.product
+    -%}
+  {% endcomment %}
+
+  {%- liquid
+
+    assign snippet_name = 'card-product-grid'
+    assign snippet_classes = snippet_name
+    assign snippet_id = snippet_name | append: '--' | append: card_product.id
+
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+    assign aos_id = snippet_id
+
+    assign snippet_aria_role = card_aria_role | default: ''
+    assign snippet_available = card_product.available | default: false
+    assign snippet_background = card_background | default: 'lemon'
+    assign snippet_description = card_product.description | default: ''
+    assign snippet_featured_image = card_product.featured_image | default: false
+    assign snippet_price = card_product.price
+    assign snippet_compare_at_price = card_product.compare_at_price
+    assign snippet_title = card_product.title | default: ''
+    assign snippet_url = card_product.url | default: ''
+
+    unless snippet_available
+      assign snippet_background = 'grey'
+      assign snippet_classes = snippet_classes | append: ' unavailable'
+    endunless
+
+  -%}
+
+  {%- style -%}
+    #{{ snippet_id }} .{{ snippet_name }}__content {
+      background: var(--theme-colour--{{ snippet_background }});
+    }
+  {%- endstyle -%}
+
+  <article class="{{ snippet_classes }}" id="{{ snippet_id }}" {% if snippet_aria_role != blank %}role="{{ snippet_aria_role }}"{% endif %}>
+
+    {% unless snippet_available %}
+      {%- liquid
+        capture aos_attrs
+          render 'aos-attributes', anchor: aos_id, delay: 400, transition: 'fade-down'
+        endcapture
+        assign aos_delay = aos_delay | plus: aos_delay_increment
+      -%}
+      <div class="{{ snippet_name }}__badge" {{ aos_attrs }}>{% render 'svg', type: 'badge.sold-out' %}</div>
+    {% endunless %}
+
+    {% if snippet_featured_image %}
+      {%- liquid
+        capture aos_attrs
+          render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+        endcapture
+        assign aos_delay = aos_delay | plus: aos_delay_increment
+      -%}
+      <div class="{{ snippet_name }}__image" {{ aos_attrs }}>
+        {% if snippet_url != blank %}<a class="{{ snippet_name }}__image-link link" href="{{ snippet_url }}" target="_self" snippet_title="{{ snippet_title }}">{% endif %}
+          {% render 'lazyload-image', alt_text: snippet_title, image: snippet_featured_image %}
+        {% if snippet_url != blank %}</a>{% endif %}
+      </div>
+    {% endif %}
+
+    {% if snippet_title != blank or snippet_description != blank %}
+      <div class="{{ snippet_name }}__content">
+        {% if snippet_title != blank %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-right'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+          <strong class="{{ snippet_name }}__heading heading--primary" {{ aos_attrs }}>Shop {{ snippet_title }}</strong>
+        {% endif %}
+        {% if snippet_description != blank %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-right'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+          <div class="{{ snippet_name }}__message body-copy--primary" {{ aos_attrs }}>{{ snippet_description }}</div>
+        {% endif %}
+
+        {% if snippet_url != blank %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-right'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+
+          {% capture snippet_classes %}{{ snippet_name }}__price price{% endcapture %}
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-left'
+            endcapture
+            assign aos_delay = aos_delay | plus: aos_delay_increment
+          -%}
+          {% render 'price', aos_attrs: aos_attrs, classes: snippet_classes, product: card_product %}
+
+          {%- liquid
+            capture aos_attrs
+              render 'aos-attributes', anchor: aos_id, delay: aos_delay, transition: 'fade-up'
+            endcapture
+          -%}
+          <div class="{{ snippet_name }}__cta" {{ aos_attrs }}>
+            <a class="{{ snippet_name }}__cta-link link{% unless snippet_available %}-disabled{% endunless %}" href="{{ snippet_url }}" target="_self" snippet_title="Shop {{ snippet_title }}">
+              <div class="button--svg d-lg-none">{% render 'svg', type: 'button.shop-now.sm' %}</div>
+              <div class="button--svg d-none d-lg-block">{% render 'svg', type: 'button.shop-now' %}</div>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </article>
+
+{% endif %}

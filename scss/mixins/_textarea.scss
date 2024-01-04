@@ -1,0 +1,16 @@
+@use "breakpoint" as *;
+@use "font" as *;
+@use "ui" as *;
+
+@mixin textarea-style( $style: 1 ) {
+
+  @include clarendon-wide(700);
+  text-transform: none;
+  min-height: 160px;
+
+  @if $style == 1 {
+    @include border-solid( var(--theme-border-width), 'inherit' );
+    border-radius: 4px;
+  }
+
+}

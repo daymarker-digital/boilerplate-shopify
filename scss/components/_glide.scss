@@ -1,0 +1,15 @@
+.glide {
+
+  position: relative;
+  min-width: 0; // fix for when glide is child of display: grid
+  max-width: 100%;
+
+  &__slides {
+    touch-action: auto;
+  }
+
+  &__track {
+    transition: height var(--theme-transition-duration);
+  }
+
+}

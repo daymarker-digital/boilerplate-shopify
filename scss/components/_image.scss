@@ -1,0 +1,63 @@
+@use "../mixins/breakpoint" as *;
+
+.image {
+
+  width: 100%;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &--mobile {
+    &-adapt {
+      height: auto;
+      img {
+        height: auto;
+        object-fit: initial;
+      }
+    }
+    @for $i from 3 through 7 {
+      $value: $i * 100px;
+      &-#{$value} {
+        height: $value;
+        img {
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .post-type--post & {
+    img {
+      border-radius: var(--theme-post-media-border-radius);
+    }
+  }
+
+  @include breakpoint(lg) {
+
+    &--desktop {
+      &-adapt {
+        height: auto;
+        img {
+          height: auto;
+          object-fit: initial;
+        }
+      }
+      @for $i from 5 through 9 {
+        $value: $i * 100px;
+        &-#{$value} {
+          height: $value;
+          img {
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+
+  }
+
+}

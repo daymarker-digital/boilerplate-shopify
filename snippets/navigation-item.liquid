@@ -1,0 +1,76 @@
+{%- if item_link and item_link != blank -%}
+
+  {%- liquid
+
+    assign link_active = item_link.active | default: false
+    assign link_title = item_link.title | default: ''
+    assign link_url = item_link.url | default: ''
+    assign link_has_links = false
+
+    if item_link.links.size > 0
+      assign link_has_links = true
+    endif
+
+  -%}
+
+  <div class="navigation__item{% if link_has_links %} has-links{% endif %}{% if item_classes and item_classes != blank %} {{ item_classes }}{% endif %}">
+
+    <a class="navigation__link link{% if link_active %} active{% endif %}" href="{{ link_url }}">{{ link_title }}</a>
+
+    {% if link_has_links %}
+      <div class="sub-navigation">
+        {% render 'bs-container', state: 'open', col: 'col-12', container: 'container' %}
+          <div class="sub-navigation__layout">
+
+            {% for sub_link in link.links %}
+
+              {%- liquid
+
+                assign sub_link_active = sub_link.active | default: false
+                assign sub_link_title = sub_link.title | default: ''
+                assign sub_link_url = sub_link.url | default: ''
+                assign sub_link_has_links = false
+
+                if sub_link.links.size > 0
+                  assign sub_link_has_links = true
+                endif
+
+              -%}
+
+              <div class="sub-navigation__item{% if sub_link_has_links %} has-links{% endif %}">
+
+                <a class="sub-navigation__link link caption--2{% if sub_link_active %} active{% endif %}" href="{{ sub_link_url }}">{{ sub_link_title }}</a>
+
+                {% if sub_link_has_links %}
+
+                  <div class="sub-sub-navigation" data-links-count="{{ sub_link.links.size }}">
+                    {% for sub_sub_link in sub_link.links %}
+
+                      {%- liquid
+
+                        assign sub_sub_link_active = sub_sub_link.active | default: false
+                        assign sub_sub_link_title = sub_sub_link.title | default: ''
+                        assign sub_sub_link_url = sub_sub_link.url | default: ''
+
+                      -%}
+
+                      <div class="sub-sub-navigation__item">
+                        <a class="sub-sub-navigation__link link{% if sub_sub_link_active %} active{% endif %}" href="{{ sub_sub_link_url }}">{{ sub_sub_link_title }}</a>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                {% endif %}
+
+              </div>
+
+            {% endfor %}
+
+          </div>
+        {% render 'bs-container', state: 'closed', col: 'col-12', container: 'container' %}
+      </div>
+    {% endif %}
+
+  </div>
+
+{%- endif -%}

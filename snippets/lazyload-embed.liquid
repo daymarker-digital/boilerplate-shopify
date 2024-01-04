@@ -1,0 +1,71 @@
+{%- if video_id and video_id != blank -%}
+
+  {% comment %}
+    Renders an iframe
+
+    Accepts:
+    - video_host: {String} Video host, lowercase either "vimeo" or "youtube"
+    - video_id: {String} Unique video ID from either Vimeo or YouTube
+    - video_inline: {Boolean} Conditionally display controls or embed video as a looping background asset
+
+    Usage:
+    {%-
+      render lazyload-embed',
+        video_host: "vimeo",
+        video_id: "1234567",
+        video_inline: false
+    -%}
+  {% endcomment %}
+
+  {%- liquid
+
+    assign snippet_name = 'lazyload-embed'
+    assign snippet_classes = classes | default: snippet_name
+    assign snippet_id = snippet_name
+
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+    assign aos_id = snippet_id
+
+    assign snippet_video_id = video_id | default: ""
+    assign snippet_video_host = video_host | default: "vimeo"
+    assign snippet_video_inline = video_inline | default: false
+    assign snippet_video_src = ''
+
+  -%}
+
+  {% case snippet_video_host %}
+    {% when 'vimeo' %}
+      {%- liquid
+        assign snippet_video_src = 'https://player.vimeo.com/video/' | append: snippet_video_id
+        if snippet_video_inline
+          assign snippet_video_src = snippet_video_src | append: '?controls=1&keyboard=1&background=0&loop=0'
+        else
+          assign snippet_video_src = snippet_video_src | append: '?controls=0&keyboard=0&background=1&loop=1'
+        endif
+      -%}
+    {% when 'youtube' %}
+      {%- liquid
+        assign snippet_video_src = 'https://www.youtube.com/embed/' | append: snippet_video_id
+        if snippet_video_inline
+          assign snippet_video_src = snippet_video_src | append: '?controls=1&disablekb=0&loop=0'
+        else
+          assign snippet_video_src = snippet_video_src | append: '?controls=0&disablekb=1&loop=1'
+        endif
+      -%}
+  {% endcase %}
+
+  <iframe
+    class="{{ snippet_classes }} lazyload lazyload-item lazyload-item--embed lazypreload"
+    data-src="{{ snippet_video_src }}"
+    data-transition-delay="0"
+    data-transition-duration="300"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    width="100%"
+    height="100%"
+    src=''
+    webkitallowfullscreen mozallowfullscreen allowfullscreen
+  ></iframe>
+
+{%- endif -%}

@@ -1,0 +1,41 @@
+@use "../mixins/border" as *;
+@use "../mixins/breakpoint" as *;
+
+.stepper {
+
+  --theme-stepper--height: 30px;
+  --theme-stepper--height--lg: 34px;
+  --theme-stepper--height--xxl: 38px;
+
+  @include border-solid( 2px, 'inherit' );
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+
+  &__button,
+  &__input {
+    height: var(--theme-stepper--height);
+    width: var(--theme-stepper--height);
+  }
+
+  @include breakpoint(lg) {
+
+    &__button,
+    &__input {
+      height: var(--theme-stepper--height--lg);
+      width: var(--theme-stepper--height--lg);
+    }
+
+  }
+
+  @include breakpoint(xxl) {
+
+    &__button,
+    &__input {
+      height: var(--theme-stepper--height--xxl);
+      width: var(--theme-stepper--height--xxl);
+    }
+
+  }
+
+}

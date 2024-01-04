@@ -1,0 +1,30 @@
+@use 'sass:map';
+
+@use '../variables' as *;
+@use "border" as *;
+@use "breakpoint" as *;
+@use "font" as *;
+@use "ui" as *;
+
+@mixin input-style( $style: 1 ) {
+
+  @if $style == 1 {
+
+    @each $name, $value in $theme-button-heights {
+      @if $name == 'base' {
+        height: $value;
+      } @else {
+        @include breakpoint(#{$name}) {
+          height: $value;
+        }
+      }
+    }
+
+    @include border-solid( var(--theme-border-width), 'inherit' );
+    border-radius: 4px;
+
+  }
+
+  @if $style == 2 {}
+
+}

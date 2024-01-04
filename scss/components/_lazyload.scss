@@ -1,0 +1,27 @@
+.lazyload {
+
+  $count: 25;
+
+  &-item {
+
+    display: block;
+    transition-property: opacity;
+    opacity: 0;
+
+    &.lazyloaded {
+      opacity: 1;
+    }
+
+    @while $count < 4000 {
+      &[data-transition-duration="#{$count}"] {
+        transition-duration: $count + ms;
+      }
+      &[data-transition-delay="#{$count}"] {
+        transition-delay: $count + ms;
+      }
+      $count: $count + 25;
+    }
+
+  }
+
+}

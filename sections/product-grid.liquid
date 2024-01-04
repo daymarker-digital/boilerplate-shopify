@@ -1,0 +1,299 @@
+{%- liquid
+
+  assign section_name = 'product-grid'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign section_container = section.settings.container | default: 'container'
+  assign section_grid_gap = section.settings.grid_gap | default: '20'
+  assign section_product_blocks = section.blocks | where: "type", "product"
+  assign section_product_blocks_size = section_product_blocks.size | default: 0
+  assign section_product_image_aspect_ratio_desktop = section.settings.product_image_aspect_ratio_desktop | default: ''
+  assign section_product_image_aspect_ratio_mobile = section.settings.product_image_aspect_ratio_mobile | default: ''
+
+-%}
+
+{% if section_product_blocks_size > 1 %}
+
+  {%- style -%}
+
+    {% if section_product_image_aspect_ratio_mobile and section_product_image_aspect_ratio_mobile != blank %}
+      #{{ section_id }} .card-product__image,
+      #{{ section_id }} .card-product__image-link {
+        aspect-ratio: {{ section_product_image_aspect_ratio_mobile }};
+      }
+    {% endif %}
+
+    #{{ section_id }} .{{ section_name }}__grid {
+      gap: {{ section_grid_gap }}px;
+    }
+
+    @media screen and (min-width: 992px) {
+
+      {% if section_product_image_aspect_ratio_desktop and section_product_image_aspect_ratio_desktop != blank %}
+        #{{ section_id }} .card-product__image,
+        #{{ section_id }} .card-product__image-link {
+          aspect-ratio: {{ section_product_image_aspect_ratio_desktop }};
+        }
+      {% endif %}
+
+    }
+
+    {%
+      render 'element-styles',
+        background: section.settings.background,
+        background_image: section.settings.background_image,
+        background_image_position_desktop: section.settings.background_image_position_desktop,
+        background_image_position_mobile: section.settings.background_image_position_mobile,
+        background_image_repeat: section.settings.background_image_repeat,
+        background_image_size: section.settings.background_image_size,
+        border_bottom: section.settings.border_bottom,
+        border_top: section.settings.border_top,
+        id: section_id,
+        padding_bottom: section.settings.padding_bottom,
+        padding_top: section.settings.padding_top
+    %}
+
+  {%- endstyle -%}
+
+  <div class="{{ section_classes }}" id="{{ section_id }}">
+    {%- render 'bs-container', state: 'open', col: 'col-12', container: section_container -%}
+      <div class="{{ section_name }}__grid grid--{{ section_product_blocks_size }}" role="list">
+        {%- for block in section_product_blocks -%}
+          {%-
+            render 'card-product-grid',
+              card_aria_role: 'listitem'
+              card_background: block.settings.background
+              card_product: block.settings.product
+          -%}
+        {%- endfor -%}
+      </div>
+    {%- render 'bs-container', state: 'closed', col: 'col-12', container: section_container -%}
+  </div>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "tag": "section",
+  "class": "section section--product-grid",
+  "settings": [
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+      "label": "Background",
+      "type": "select",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "Lemon", "value": "lemon" },
+        { "label": "Lime", "value": "lime" },
+        { "label": "Mango", "value": "mango" },
+        { "label": "None", "value": "none" },
+        { "label": "Orange", "value": "orange" },
+        { "label": "Strawberry", "value": "strawberry" }
+      ],
+      "default": "none",
+      "id": "background"
+    },
+    {
+      "label": "Background Image",
+      "type": "image_picker",
+      "id": "background_image"
+    },
+    {
+      "label": "Background Image Position (Mobile)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_mobile"
+    },
+    {
+      "label": "Background Image Position (Desktop)",
+      "type": "select",
+      "options": [
+        { "label": "Top Left", "value": "top left" },
+        { "label": "Top Center", "value": "top center" },
+        { "label": "Top Right", "value": "top right" },
+        { "label": "Center Left", "value": "center left" },
+        { "label": "Center Center", "value": "center center" },
+        { "label": "Center Right", "value": "center right" },
+        { "label": "Bottom Left", "value": "bottom left" },
+        { "label": "Bottom Center", "value": "bottom center" },
+        { "label": "Bottom Right", "value": "bottom right" }
+      ],
+      "default": "center center",
+      "id": "background_image_position_desktop"
+    },
+    {
+      "label": "Background Image Repeat",
+      "type": "select",
+      "options": [
+        { "label": "No Repeat", "value": "no-repeat" },
+        { "label": "Repeat", "value": "repeat" }
+      ],
+      "default": "repeat",
+      "id": "background_image_repeat"
+    },
+    {
+      "label": "Background Image Size",
+      "type": "select",
+      "options": [
+        { "label": "100px", "value": "100px" },
+        { "label": "200px", "value": "200px" },
+        { "label": "300px", "value": "300px" },
+        { "label": "400px", "value": "400px" },
+        { "label": "500px", "value": "500px" },
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
+      ],
+      "default": "cover",
+      "id": "background_image_size"
+    },
+    {
+      "content": "Border",
+      "type": "header"
+    },
+    {
+      "label": "Top Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_top"
+    },
+    {
+      "label": "Bottom Border",
+      "type": "checkbox",
+      "default": false,
+      "id": "border_bottom"
+    },
+    {
+      "content": "Container",
+      "type": "header"
+    },
+    {
+      "content": "Container",
+      "type": "header"
+    },
+    {
+      "label": "Container",
+      "type": "select",
+      "options": [
+        {  "label": "Static", "value": "container" },
+        { "label": "Fluid", "value": "container-fluid" },
+        { "label": "Full Width", "value": "full-width" }
+      ],
+      "default": "container",
+      "id": "container"
+    },
+    {
+      "content": "Grid",
+      "type": "header"
+    },
+    {
+      "label": "Grid Gap",
+      "type": "range",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "id": "grid_gap"
+    },
+    {
+      "content": "Padding",
+      "type": "header"
+    },
+    {
+      "label": "Top Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_top"
+    },
+    {
+      "label": "Bottom Padding",
+      "type": "range",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "id": "padding_bottom"
+    },
+    {
+      "content": "Product",
+      "type": "header"
+    },
+    {
+      "label": "Image Aspect Ratio (Mobile)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on smaller devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_mobile"
+    },
+    {
+      "label": "Image Aspect Ratio (Desktop)",
+      "info": "Optionally include an aspect ratio for the product images for consistent user experience on larger devices.",
+      "type": "text",
+      "id": "product_image_aspect_ratio_desktop"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "limit": 3,
+      "settings": [
+        {
+          "label": "Product",
+          "type": "product",
+          "id": "product"
+        },
+        {
+          "label": "Background",
+          "type": "select",
+          "options": [
+            { "label": "Lemon", "value": "lemon" },
+            { "label": "Lime", "value": "lime" },
+            { "label": "Mango", "value": "mango" },
+            { "label": "Orange", "value": "orange" },
+            { "label": "Strawberry", "value": "strawberry" }
+          ],
+          "default": "lemon",
+          "id": "background"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Grid",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

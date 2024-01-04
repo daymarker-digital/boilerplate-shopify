@@ -1,0 +1,19 @@
+@mixin border-solid( $width: 1px, $colour: 'inherit', $side: false ) {
+
+  $color: currentcolor;
+
+  @if 'inherit' != $colour {
+    $color: rgba(var(--theme-colour-#{$colour}), 1);
+  }
+
+  @if $side {
+    border-#{$side}-style: solid;
+    border-#{$side}-width: $width;
+    border-#{$side}-color: $color
+  } @else {
+    border-style: solid;
+    border-width: $width;
+    border-color: $color
+  }
+
+}

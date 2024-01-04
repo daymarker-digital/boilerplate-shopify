@@ -1,0 +1,24 @@
+@mixin clarendon-wide( $weight: 700 ) {
+  font-family: clarendon-wide, serif;
+  font-style: normal;
+  font-weight: $weight;
+}
+
+@mixin new-sprint( $weight: 300 ) {
+  font-family: new-spirit, serif;
+  font-style: normal;
+  font-weight: $weight;
+}
+
+@mixin novecento-sans-condensed( $weight: 700 ) {
+  font-family: novecento-sans-condensed, sans-serif;
+  font-style: normal;
+  font-weight: $weight;
+}
+
+@mixin sarina( $weight: 400 ) {
+  font-family: sarina, sans-serif;
+  font-style: normal;
+  font-weight: $weight;
+  line-height: 1.27;
+}

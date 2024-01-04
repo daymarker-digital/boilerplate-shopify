@@ -1,0 +1,10 @@
+@use "breakpoint" as *;
+@use "font" as *;
+
+@mixin label-style( $style: 1 ) {
+
+  @if $style == 1 {}
+
+  @if $style == 2 {}
+
+}

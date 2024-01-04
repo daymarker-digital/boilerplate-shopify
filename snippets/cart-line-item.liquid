@@ -1,0 +1,98 @@
+{%- if cart_line_item and cart_line_item != blank %}
+
+  {% comment %}
+    Renders a product grid card
+
+    Accepts:
+    - cart_line_item: {Object} Cart line item object
+    - cart_line_item_classes: {String} Optionally include custom classes
+    - cart_line_item_index: {String} Index of current cart line item
+
+    Usage:
+    {%-
+      render 'cart-line-item',
+        cart_line_item: item,
+        cart_line_item_classes: 'some-great class-here custom',
+        cart_line_item_index: '1'
+    -%}
+  {% endcomment %}
+
+  {%- liquid
+
+    assign snippet_name = 'cart-line-item'
+    assign snippet_classes = cart_line_item_classes | default: snippet_name
+    assign snippet_id = snippet_name | append: '--' | append: cart_line_item_index
+
+    assign aos_delay = 250
+    assign aos_delay_increment = 250
+    assign aos_id = snippet_id
+
+    assign cart_line_item_image = cart_line_item.image | default: false
+    assign cart_line_item_key = cart_line_item.key | default: false
+    assign cart_line_item_original_line_price = cart_line_item.original_line_price
+    assign cart_line_item_product_title = cart_line_item.product.title | default: ''
+    assign cart_line_item_product_has_variants = true
+    assign cart_line_item_quantity = cart_line_item.quantity
+    assign cart_line_item_type = cart_line_item.product.type | default: ''
+    assign cart_line_item_url = cart_line_item.url | default: ''
+    assign cart_line_item_url_to_remove = cart_line_item.url_to_remove | default: ''
+    assign cart_line_item_variant_title = cart_line_item.variant.title | default: ''
+    assign cart_line_item_variant_inventory_management = cart_line_item.variant.inventory_management
+    assign cart_line_item_variant_inventory_quantity = 9999
+
+    if cart_line_item.product.has_only_default_variant
+      assign cart_line_item_product_has_variants = false
+    endif
+
+    if cart_line_item_variant_inventory_management != nil
+      assign cart_line_item_variant_inventory_quantity = cart_line_item.variant.inventory_quantity
+    endif
+
+  -%}
+
+  <div
+    class="{{ snippet_classes }} body-copy--primary"
+    id="{{ snippet_name }}--{{ cart_line_item_key }}"
+    data-key="{{ cart_line_item_key }}"
+    data-inventory-management="{{ cart_line_item_variant_inventory_management }}"
+    data-inventory-quantity="{{ cart_line_item_variant_inventory_quantity }}"
+  >
+
+    <div class="{{ snippet_name }}__image">
+      <a class="{{ snippet_name }}__image-link link" href="{{ cart_line_item_url }}" title="{{ cart_line_item_product_title }}" target="_self">
+        {% render 'lazyload-image', image: cart_line_item_image %}
+      </a>
+    </div>
+
+    <div class="{{ snippet_name }}__content">
+
+      <div class="{{ snippet_name }}__info">
+        <strong class="{{ snippet_name }}__title heading--primary">
+          <a class="{{ snippet_name }}__title-link link" href="{{ cart_line_item_url }}" title="{{ cart_line_item_product_title }}" target="_self">
+            {{ cart_line_item_product_title }}
+          </a>
+        </strong>
+        {% if cart_line_item_product_has_variants %}
+          <div class="{{ snippet_name }}__options">
+            {% for option in cart_line_item.options_with_values %}
+              <div class="{{ snippet_name }}__option">
+                <span class="{{ snippet_name }}__option-name">{{ option.name }}</span>
+                <span class="{{ snippet_name }}__option-value">{{ option.value }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <strong class="{{ snippet_name }}__price">{{ cart_line_item_original_line_price | money_with_currency }}</strong>
+
+      {%- capture stepper_classes -%}{{ snippet_name }}__stepper stepper{%- endcapture -%}
+      {%- render 'stepper', stepper_classes: stepper_classes, stepper_max: cart_line_item_variant_inventory_quantity, stepper_value: cart_line_item_quantity -%}
+
+      <button class="{{ snippet_name }}__button-remove button--remove-cart-line-item js--remove-cart-line-item" aria-label="Remove" type="button"></button>
+
+    </div>
+
+  </div>
+
+{%- endif -%}

@@ -1,0 +1,27 @@
+{% comment %}
+  Renders a JavaScript console.log of item
+
+  Accepts:
+  - item: {Object} Shopify object or item to debug
+  - message: {String} Optionally include a message
+
+  Usage:
+  {%-
+    render 'debug-this',
+      item: block.settings,
+      message: 'Debugging Article'
+  -%}
+{% endcomment %}
+
+{%- liquid
+  assign item = item | default: 'Item not assigned to snippet!'
+  assign message = message | default: 'Message not assigned to snippet!'
+-%}
+
+<script>
+  console.log({
+    message: '{{ message }}',
+    item: {{ item | json }},
+    type: typeof {{ item | json }}
+  });
+</script>

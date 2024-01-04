@@ -1,0 +1,32 @@
+@use "../mixins/general" as *;
+
+.featured-products {
+
+  &__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    bottom: 10%;
+    width: 100%;
+  }
+
+  &__media {
+    position: relative;
+    img, svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  @include breakpoint(lg) {
+
+    .card-product-placeholder {
+      display: none;
+    }
+
+  }
+
+}

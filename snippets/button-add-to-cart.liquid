@@ -1,0 +1,26 @@
+{% comment %}
+
+    Accepts:
+    - variant_id: {Integer} Unique variant ID
+    - button_title: {String} Optionally use a custom button title
+
+    Usage:
+    {% render 'button-add-to-cart', variant_id: 2342352512, button_title: 'Add to Bag' %}
+
+{% endcomment %}
+
+{% if variant_id and variant_id != blank %}
+
+  {% assign button_title = button_title | default: 'Add to Cart' %}
+  {% assign classes = classes | default: 'button--add-to-cart' %}
+
+  <button
+    class="{{ classes }} js--add-to-cart"
+    type="button"
+    data-variant-id="{{ variant_id }}"
+    data-quantity="1"
+  >
+    <span class="button__title">{{ button_title }}</span>
+  </button>
+
+{% endif %}

@@ -1,0 +1,44 @@
+{%- if link_title and link_title != blank and link_url and link_url != blank -%}
+
+  {%- comment -%}
+      Renders a link element
+
+      Accepts:
+      - link_active: {Boolean} Optionally set active state of link
+      - link_classes: {String} Optionally include custom classes for snippet
+      - link_content: {Mixed} Optionally include custom content for link, be it from a capture or otherwise
+      - link_title: {String} Title of link
+      - link_url: {String} URL of link
+
+      Usage:
+      {%- render 'link', link_title: 'Contact Us', link_url: '/pages/contact-us/' -%}
+  {%- endcomment -%}
+
+  {%- liquid
+
+    assign snippet_name = 'link'
+    assign snippet_classes = link_classes | default: snippet_name
+
+    assign link_active = link_active | default: false
+    assign link_content = link_content | default: ''
+    assign link_target = '_self'
+
+    if link_active
+      assign snippet_classes = snippet_classes | append: ' active'
+    endif
+
+    if link_url contains 'http'
+      assign link_target = '_blank'
+    endif
+
+  -%}
+
+  <a class="{{ snippet_classes }}" href="{{ link_url }}" target="{{ link_target }}" title="{{ link_title }}">
+    {% if link_content != blank %}
+      <div class="{{ snippet_name }}__content">{{ link_content }}</div>
+    {% else %}
+      <span class="{{ snippet_name }}__title">{{ link_title }}</span>
+    {% endif %}
+  </a>
+
+{%- endif -%}

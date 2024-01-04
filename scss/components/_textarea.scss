@@ -1,0 +1,18 @@
+@use '../mixins/ui' as *;
+
+.textarea {
+
+  @extend %ui-base;
+  @extend %ui-input;
+
+  &--primary,
+  &--secondary {
+    @extend .textarea;
+  }
+
+  &[disabled],
+  &.disabled {
+    @extend %ui-disabled;
+  }
+
+}

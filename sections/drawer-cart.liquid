@@ -1,0 +1,187 @@
+{%- liquid
+
+  assign section_name = 'drawer-cart'
+  assign section_classes = section_name
+  assign section_id = 'shopify-section-' | append: section.id
+
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+  assign aos_id = section_id
+
+  assign section_cart_heading = settings.cart_heading | default: ''
+  assign section_empty_cart_message = settings.cart_empty_message | default: '<p>Oops! Nothing added to your cart yet :(</p>'
+
+  assign section_form_action = routes.cart_url
+  assign section_form_id = section_name | append: '__line-items'
+
+  assign section_line_item_image_aspect_ratio_desktop = section.settings.line_item_image_aspect_ratio_desktop | default: ''
+  assign section_line_item_image_aspect_ratio_mobile = section.settings.line_item_image_aspect_ratio_mobile | default: ''
+
+-%}
+
+{%- style -%}
+
+  {% if section_line_item_image_aspect_ratio_mobile and section_line_item_image_aspect_ratio_mobile != blank %}
+    #{{ section_id }} .cart-line-item__image {
+      aspect-ratio: {{ section_line_item_image_aspect_ratio_mobile }};
+    }
+  {% endif %}
+
+  @media screen and (min-width: 992px) {
+    {% if section_line_item_image_aspect_ratio_desktop and section_line_item_image_aspect_ratio_desktop != blank %}
+      #{{ section_id }} .cart-line-item__image {
+        aspect-ratio: {{ section_line_item_image_aspect_ratio_desktop }};
+      }
+    {% endif %}
+  }
+
+  {%-
+    render 'element-styles',
+      background: section.settings.background,
+      background_image: section.settings.background_image,
+      background_image_position_desktop: section.settings.background_image_position_desktop,
+      background_image_position_mobile: section.settings.background_image_position_mobile,
+      background_image_repeat: section.settings.background_image_repeat,
+      background_image_size: section.settings.background_image_size,
+      id: section_id
+  -%}
+
+{%- endstyle -%}
+
+<div class="{{ section_name }}__header">
+  <button aria-label="Close" class="{{ section_name }}__button-close button js--close-drawer" type="button"></button>
+</div>
+
+<div class="{{ section_name }}__main">
+  <div class="{{ section_name }}__main-content">
+    <form class="{{ section_form_id }} js--cart" id="{{ section_form_id }}" action="{{ section_form_action }}" method="post">
+      {%- for item in cart.items -%}
+        {%- capture snippet_classes -%}{{ section_name }}__line-item{%- endcapture -%}
+        {%- render 'cart-line-item', cart_line_item_classes: snippet_classes, cart_line_item_index: forloop.index, cart_line_item: item -%}
+      {%- else -%}
+         <div class='cart-empty-message'>
+          <div class='cart-empty-message__content body-copy--primary body-copy--2'>{{ section_empty_cart_message }}</div>
+        </div>
+      {%- endfor -%}
+    </form>
+  </div>
+</div>
+
+<div class="{{ section_name }}__footer">
+
+  <div class="{{ section_name }}__cart-subtotal">
+    <div class="{{ section_name }}__cart-subtotal-label">Subtotal</div>
+    <div class="{{ section_name }}__cart-subtotal-value js--cart-subtotal">{{ cart.items_subtotal_price | money_with_currency }}</div>
+  </div>
+
+  <div class="{{ section_name }}__actions">
+    <button class="{{ section_name }}__button-checkout button--primary" form="{{ section_form_id }}" name="checkout" type="submit" value="Checkout">Checkout</button>
+  </div>
+
+</div>
+
+{% schema %}
+  {
+    "name": "Drawer | Cart",
+    "tag": "section",
+    "class": "drawer drawer-cart",
+    "settings": [
+      {
+        "content": "Settings",
+        "type": "header"
+      },
+      {
+        "label": "Background",
+        "type": "select",
+        "options": [
+          { "label": "Black", "value": "black" },
+          { "label": "White", "value": "white" }
+        ],
+        "default": "white",
+        "id": "background"
+      },
+      {
+        "label": "Background Image",
+        "type": "image_picker",
+        "id": "background_image"
+      },
+      {
+        "label": "Background Image Position (Mobile)",
+        "type": "select",
+        "options": [
+          { "label": "Top Left", "value": "top left" },
+          { "label": "Top Center", "value": "top center" },
+          { "label": "Top Right", "value": "top right" },
+          { "label": "Center Left", "value": "center left" },
+          { "label": "Center Center", "value": "center center" },
+          { "label": "Center Right", "value": "center right" },
+          { "label": "Bottom Left", "value": "bottom left" },
+          { "label": "Bottom Center", "value": "bottom center" },
+          { "label": "Bottom Right", "value": "bottom right" }
+        ],
+        "default": "center center",
+        "id": "background_image_position_mobile"
+      },
+      {
+        "label": "Background Image Position (Desktop)",
+        "type": "select",
+        "options": [
+          { "label": "Top Left", "value": "top left" },
+          { "label": "Top Center", "value": "top center" },
+          { "label": "Top Right", "value": "top right" },
+          { "label": "Center Left", "value": "center left" },
+          { "label": "Center Center", "value": "center center" },
+          { "label": "Center Right", "value": "center right" },
+          { "label": "Bottom Left", "value": "bottom left" },
+          { "label": "Bottom Center", "value": "bottom center" },
+          { "label": "Bottom Right", "value": "bottom right" }
+        ],
+        "default": "center center",
+        "id": "background_image_position_desktop"
+      },
+      {
+        "label": "Background Image Repeat",
+        "type": "select",
+        "options": [
+          { "label": "No Repeat", "value": "no-repeat" },
+          { "label": "Repeat", "value": "repeat" }
+        ],
+        "default": "no-repeat",
+        "id": "background_image_repeat"
+      },
+      {
+        "label": "Background Image Size",
+        "type": "select",
+        "options": [
+          { "label": "100px", "value": "100px" },
+          { "label": "200px", "value": "200px" },
+          { "label": "300px", "value": "300px" },
+          { "label": "400px", "value": "400px" },
+          { "label": "500px", "value": "500px" },
+          { "label": "Auto", "value": "auto" },
+          { "label": "Contain", "value": "contain" },
+          { "label": "Cover", "value": "cover" }
+        ],
+        "default": "cover",
+        "id": "background_image_size"
+      },
+      {
+        "content": "Line Item",
+        "type": "header"
+      },
+      {
+        "label": "Image Aspect Ratio (Mobile)",
+        "info": "Optionally include an aspect ratio for the product images for consistent user experience on smaller devices.",
+        "type": "text",
+        "id": "line_item_image_aspect_ratio_mobile"
+      },
+      {
+        "label": "Image Aspect Ratio (Desktop)",
+        "info": "Optionally include an aspect ratio for the product images for consistent user experience on larger devices.",
+        "type": "text",
+        "id": "line_item_image_aspect_ratio_desktop"
+      }
+    ],
+	  "blocks": []
+  }
+{% endschema %}

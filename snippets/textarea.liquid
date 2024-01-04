@@ -1,0 +1,30 @@
+{%- liquid
+
+  assign snippet_name = 'textarea'
+  assign snippet_classes = snippet_name
+
+  assign name = name | default: ''
+  assign placeholder = placeholder | default: ''
+  assign readonly = readonly | default: false
+  assign value = value | default: ''
+
+  if classes
+    assign snippet_classes = snippet_classes | append: ' ' | append: classes | strip
+  endif
+
+  if required
+    assign snippet_classes = snippet_classes | append: ' required' | strip
+  endif
+
+-%}
+
+{% if name and name != blank %}
+  <textarea
+    class="{{- snippet_classes -}}"
+    name="{{- name -}}"
+    rows="10"
+    {% if value != blank %}value="{{- value -}}"{% endif %}
+    {% if placeholder != blank %}placeholder="{{- placeholder -}}"{% endif %}
+    {% if readonly %}readonly{% endif %}
+  ></textarea>
+{% endif %}

@@ -1,0 +1,115 @@
+{%- liquid
+
+  assign section_name = 'fifty-fifty'
+  assign section_classes = section_name | append: ' section-' | append: section.id | append: '-padding'
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign aos_id = section_id | append: '--aos'
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+
+  assign container = section.settings.container | default: 'container'
+  assign content_placement_horizontal = section.settings.content_placement_horizontal | default: ''
+  assign content_placement_vertical = section.settings.content_placement_vertical | default: ''
+  assign content_stack_mobile = section.settings.content_stack_mobile | default: false
+  assign image = section.settings.image | default: false
+  assign image_height_desktop = section.settings.image_height_desktop | default: 'adapt'
+  assign image_height_mobile = section.settings.image_height_mobile | default: 'adapt'
+
+  if section.settings.anchor_id != blank
+    assign section_id = section.settings.anchor_id
+  endif
+
+-%}
+
+{%
+  render 'section-styles',
+  background: section.settings.background,
+  id: section.id,
+  padding_bottom: section.settings.padding_bottom
+  padding_top: section.settings.padding_top,
+%}
+
+<link rel="stylesheet" href="{{ 'section-fifty-fifty.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'section-fifty-fifty.css' | asset_url | stylesheet_tag }}</noscript>
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  {% render 'bs-container', state: 'open', col: 'col-12 col-lg-10 offset-lg-1', container: container %}
+
+  {% render 'bs-container', state: 'closed', container: container %}
+</div>
+
+{% schema %}
+{
+  "name": "Fifty Fifty",
+  "tag": "section",
+  "class": "section section--fifty-fifty",
+  "settings": [
+    {
+			"content": "Layout",
+			"type": "header"
+		},
+    {
+		  "label": "Background",
+		  "type": "select",
+		  "options": [
+        { "label": "Black", "value": "black" },
+			  { "label": "White", "value": "white" }
+		  ],
+		  "default": "white",
+		  "id": "background"
+		},
+    {
+      "label": "Container",
+      "type": "select",
+      "options": [
+        { "label": "Static", "value": "container" },
+        { "label": "Fluid", "value": "container-fluid" },
+        { "label": "Full Width", "value": "full-width" }
+      ],
+      "default": "container",
+      "id": "container"
+    },
+    {
+			"content": "Padding",
+			"type": "header"
+		},
+		{
+			"label": "Top Padding",
+			"type": "range",
+			"min": 0,
+			"max": 120,
+			"step": 4,
+			"unit": "px",
+			"default": 36,
+      "id": "padding_top"
+		},
+		{
+			"label": "Bottom Padding",
+			"type": "range",
+			"min": 0,
+			"max": 120,
+			"step": 4,
+			"unit": "px",
+			"default": 36,
+      "id": "padding_bottom"
+		},
+    {
+			"content": "Anchor",
+			"type": "header"
+		},
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Fifty Fifty"
+    }
+  ]
+}
+{% endschema %}

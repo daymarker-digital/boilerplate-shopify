@@ -1,0 +1,168 @@
+@use "../mixins/border" as *;
+@use "../mixins/breakpoint" as *;
+
+.card-product-grid {
+
+  min-height: 100%;
+  display: flex;
+  flex-flow: column;
+  position: relative;
+
+  &__cta,
+  &__price {
+    padding-top: min(32px, 4.75vw);
+    margin-top: auto;
+  }
+
+  &__badge {
+    height: 70px;
+    width: auto;
+    position: absolute;
+    top: 14px;
+    left: -14px;
+    z-index: 50;
+    img, svg {
+      display: block;
+      height: 100%;
+      width: auto;
+    }
+  }
+
+  &__content {
+    @include border-solid( var(--theme-border--width), 'black' );
+    border-bottom-left-radius: var(--theme-border--radius);
+    border-bottom-right-radius: var(--theme-border--radius);
+    padding-top: min(65px, 6.25vw);
+    padding-bottom: min(65px, 6.25vw);
+    padding-left: var(--theme-layout--gutter);
+    padding-right: var(--theme-layout--gutter);
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    text-transform: uppercase;
+  }
+
+  &__cta {
+    &-link {
+      display: block;
+      width: auto;
+      max-width: 440px;
+      margin: auto;
+    }
+  }
+
+  &__heading {
+    font-size: min(52px, 8.5vw);
+    line-height: 1.2;
+    & + .card-product-grid__message {
+      margin-top: min(22px, 2.25vw);
+    }
+  }
+
+  &__image {
+    @include border-solid( var(--theme-border--width), 'black', 'left' );
+    @include border-solid( var(--theme-border--width), 'black', 'top' );
+    @include border-solid( var(--theme-border--width), 'black', 'right' );
+    border-top-left-radius: var(--theme-border--radius);
+    border-top-right-radius: var(--theme-border--radius);
+    overflow: hidden;
+    &-link {
+      &:hover {
+        opacity: var(--theme-transition--opacity);
+      }
+      .unavailable & {
+        pointer-events: none;
+      }
+    }
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__message {
+    font-size: min(23px, 3.5vw);
+    line-height: 1.25;
+    margin-bottom: -8px;
+  }
+
+  &__price {
+    font-size: min(26px, 3vw);
+    & + .card-product-grid__cta {
+      margin-top: initial;
+    }
+  }
+
+  @include breakpoint(sm) {
+
+    &__badge {
+      height: 76px;
+    }
+
+    &__content {
+      padding-left: min(62px, 5.5vw);
+      padding-right: min(62px, 5.5vw);
+    }
+
+  }
+
+  @include breakpoint(md) {
+
+    &__badge {
+      height: 82px;
+    }
+
+  }
+
+  @include breakpoint(lg) {
+
+    &__badge {
+      height: 70px;
+    }
+
+    &__content {
+      padding-top: min(46px, 3.25vw);
+      padding-bottom: min(46px, 3.25vw);
+      padding-left: min(46px, 3.5vw);
+      padding-right: min(46px, 3.5vw);
+    }
+
+    &__cta {
+      &-link {
+        max-width: 250px;
+      }
+    }
+
+    &__heading {
+      font-size: min(54px, 3.25vw);
+    }
+
+    &__message {
+      font-size: min(22px, 1.5vw);
+    }
+
+    &__price {
+      font-size: min(27px, 3vw);
+    }
+
+  }
+
+  @include breakpoint(xl) {
+
+    &__badge {
+      height: 76px;
+    }
+
+  }
+
+  @include breakpoint(xxl) {
+
+    &__badge {
+      height: 82px;
+    }
+
+  }
+
+}

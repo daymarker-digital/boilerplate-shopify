@@ -1,0 +1,13 @@
+{%- assign fonts = fonts | default: '' -%}
+
+{%- if fonts != blank -%}
+  {%- assign fonts = fonts | split: ', ' -%}
+  {%- for font in fonts -%}
+
+    {%- assign font_file = font | append: '.woff2' -%}
+    {%- assign font_url = font_file | asset_url -%}
+
+    <link rel="preload" href='{{ font_url }}' as="font" type="font/woff2" crossorigin>
+
+  {%- endfor -%}
+{%- endif -%}

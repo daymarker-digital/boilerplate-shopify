@@ -1,0 +1,53 @@
+{%- if paginate and paginate.pages > 1 -%}
+
+  {%- liquid
+
+    assign snippet_name = 'pagination'
+    assign snippet_classes = snippet_name
+
+    if classes and classes != empty
+      assign snippet_classes = snippet_classes | prepend: ' ' | prepend: classes
+    endif
+
+  -%}
+
+  <nav class="{{ snippet_classes }}" role="navigation" aria-label="{{ template.name | capitalize }} Pagination">
+
+    <div class="{{ snippet_name }}__item previous d-none {% unless paginate.previous %}disabled{% endunless %}">
+      {% if paginate.previous %}<a class="{{ snippet_name }}__link link" href="{{ paginate.previous.url }}" target="_self" title="Previous">{% endif %}
+        <span class="{{ snippet_name }}__item-title">Prev</span>
+      {% if paginate.previous %}</a>{% endif %}
+    </div>
+
+    {% for part in paginate.parts %}
+
+      {%- liquid
+
+        assign is_active = false
+        assign is_link = part.is_link | default: false
+        assign url = part.url | default: ''
+        assign title = part.title | default: ''
+
+        if title == paginate.current_page
+          assign is_active = true
+        endif
+
+      -%}
+
+      <div class="{{ snippet_name }}__item">
+        {% if is_link %}<a class="{{ snippet_name }}__link link" href="{{ url }}" target="_self" title="{{ title }}">{% endif %}
+          <span class="{{ snippet_name }}__item-title {% if is_active %}active{% endif %}">{{ title }}</span>
+        {% if is_link %}</a>{% endif %}
+      </div>
+
+    {% endfor %}
+
+    <div class="{{ snippet_name }}__item next d-none {% unless paginate.next %}disabled{% endunless %}">
+      {% if paginate.next %}<a class="{{ snippet_name }}__link link" href="{{ paginate.next.url }}" target="_self" title="Next">{% endif %}
+        <span class="{{ snippet_name }}__item-title">Next</span>
+      {% if paginate.next %}</a>{% endif %}
+    </div>
+
+  </nav>
+
+{%- endif -%}

@@ -1,0 +1,145 @@
+{%- liquid
+
+  assign section_name = 'drawer-mobile-menu'
+  assign section_classes = section_name
+  assign section_id = 'shopify-section-' | append: section.id
+
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+  assign aos_id = section_id
+
+  assign section_menu_main = section.settings.menu_main | default: false
+
+-%}
+
+{%- style -%}
+  {%-
+    render 'element-styles',
+      background: section.settings.background,
+      background_image: section.settings.background_image,
+      background_image_position_desktop: section.settings.background_image_position_desktop,
+      background_image_position_mobile: section.settings.background_image_position_mobile,
+      background_image_repeat: section.settings.background_image_repeat,
+      background_image_size: section.settings.background_image_size,
+      id: section_id
+  -%}
+{%- endstyle -%}
+
+<div class="{{ section_name }}__main text--uppercase text--primary">
+
+  {% if section_menu_main and section_menu_main != blank %}
+    <nav class="{{ section_name }}__main-navigation navigation navigation--main">
+      {%- for link in linklists[section_menu_main].links -%}
+        <div class="{{ section_name }}__main-navigation-item navigation__item">
+          {%- capture link_classes -%}{{ section_name }}__main-navigation-link navigation__link link{% if link.active %} active{% endif %}{%- endcapture -%}
+          {%- render 'link', link_classes: link_classes, link_title: link.title, link_url: link.url -%}
+        </div>
+      {%- endfor -%}
+    </nav>
+  {% endif %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Drawer | Mobile Menu",
+    "tag": "section",
+    "class": "drawer drawer-mobile-menu",
+    "settings": [
+      {
+        "content": "Navigation",
+        "type": "header"
+      },
+      {
+        "label": "Main Menu",
+        "type": "link_list",
+        "id": "menu_main"
+      },
+      {
+        "content": "Settings",
+        "type": "header"
+      },
+      {
+        "label": "Background",
+        "type": "select",
+        "options": [
+          { "label": "Image", "value": "image" },
+          { "label": "Lemon", "value": "lemon" },
+          { "label": "Lime", "value": "lime" },
+          { "label": "Mango", "value": "mango" },
+          { "label": "None", "value": "none" },
+          { "label": "Orange", "value": "orange" },
+          { "label": "Strawberry", "value": "strawberry" }
+        ],
+        "default": "none",
+        "id": "background"
+      },
+      {
+        "label": "Background Image",
+        "type": "image_picker",
+        "id": "background_image"
+      },
+      {
+        "label": "Background Image Position (Mobile)",
+        "type": "select",
+        "options": [
+          { "label": "Top Left", "value": "top left" },
+          { "label": "Top Center", "value": "top center" },
+          { "label": "Top Right", "value": "top right" },
+          { "label": "Center Left", "value": "center left" },
+          { "label": "Center Center", "value": "center center" },
+          { "label": "Center Right", "value": "center right" },
+          { "label": "Bottom Left", "value": "bottom left" },
+          { "label": "Bottom Center", "value": "bottom center" },
+          { "label": "Bottom Right", "value": "bottom right" }
+        ],
+        "default": "center center",
+        "id": "background_image_position_mobile"
+      },
+      {
+        "label": "Background Image Position (Desktop)",
+        "type": "select",
+        "options": [
+          { "label": "Top Left", "value": "top left" },
+          { "label": "Top Center", "value": "top center" },
+          { "label": "Top Right", "value": "top right" },
+          { "label": "Center Left", "value": "center left" },
+          { "label": "Center Center", "value": "center center" },
+          { "label": "Center Right", "value": "center right" },
+          { "label": "Bottom Left", "value": "bottom left" },
+          { "label": "Bottom Center", "value": "bottom center" },
+          { "label": "Bottom Right", "value": "bottom right" }
+        ],
+        "default": "center center",
+        "id": "background_image_position_desktop"
+      },
+      {
+        "label": "Background Image Repeat",
+        "type": "select",
+        "options": [
+          { "label": "No Repeat", "value": "no-repeat" },
+          { "label": "Repeat", "value": "repeat" }
+        ],
+        "default": "no-repeat",
+        "id": "background_image_repeat"
+      },
+      {
+        "label": "Background Image Size",
+        "type": "select",
+        "options": [
+          { "label": "100px", "value": "100px" },
+          { "label": "200px", "value": "200px" },
+          { "label": "300px", "value": "300px" },
+          { "label": "400px", "value": "400px" },
+          { "label": "500px", "value": "500px" },
+          { "label": "Auto", "value": "auto" },
+          { "label": "Contain", "value": "contain" },
+          { "label": "Cover", "value": "cover" }
+        ],
+        "default": "cover",
+        "id": "background_image_size"
+      }
+    ],
+	  "blocks": []
+  }
+{% endschema %}

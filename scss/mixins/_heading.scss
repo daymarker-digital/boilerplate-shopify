@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use '../variables' as *;
+@use "breakpoint" as *;
+@use "font" as *;
+
+@mixin heading-style( $style: 'primary' ) {
+
+  @if $style == 'primary' {
+    @include font-sorry-sans(700);
+    line-height: 1.05;
+  }
+
+  @if $style == 'secondary' {
+    @include font-not-sorry-serif(700);
+    line-height: 1.15;
+  }
+
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+  display: block;
+  font-style: normal;
+  color: inherit;
+
+}
+
+@mixin heading-size( $size: '1' ) {
+  @each $name, $value in map.get($theme-heading-font-sizes, $size) {
+    @if $name == 'base' {
+      font-size: $value;
+    } @else {
+      @include breakpoint(#{$name}) {
+        font-size: $value;
+      }
+    }
+  }
+}

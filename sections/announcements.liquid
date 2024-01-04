@@ -1,0 +1,218 @@
+{%- liquid
+
+  assign section_name = 'announcements'
+  assign section_id = 'shopify-section-' | append: section.id
+
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+  assign aos_id = section_id
+
+  assign section_container = section.settings.container
+  assign section_announcements = section.blocks | where: 'type', 'announcement' | default: false
+
+  assign section_announcements_carousel_animation_duration = section.settings.carousel_animation_duration
+  assign section_announcements_carousel_autoplay = section.settings.carousel_autoplay
+  assign section_announcements_carousel_direction = section.settings.carousel_direction
+
+  assign section_announcements_enable = section.settings.enable | default: false
+  assign section_announcements_homepage_only = section.settings.homepage_only | default: false
+  assign section_announcements_glider_id = section_id | append: '--glider'
+  assign section_announcements_glider_enable = false
+
+  if section_announcements_enable
+    if section_announcements_homepage_only and 'index' != template.name
+      assign section_announcements_glider_enable = false
+    endif
+  endif
+
+  if section_announcements.size > 1
+    assign section_announcements_glider_enable = true
+  endif
+
+-%}
+
+{%- style -%}
+  {%
+    render 'element-styles',
+      background: section.settings.background,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top,
+      text_colour: section.settings.text_colour
+  -%}
+{%- endstyle -%}
+
+{% render 'bs-container', state: 'open', col: 'col-12', container: section_container %}
+  <div class="{{ section_name }}__main">
+
+    {% if section_announcements_glider_enable %}
+      <div
+        class="glide js--glide"
+        id="{{ section_announcements_glider_id }}"
+        data-glide-animation-duration="{{ section_announcements_carousel_animation_duration }}"
+        data-glide-autoplay="{{ section_announcements_carousel_autoplay }}"
+        data-glide-direction="{{ section_announcements_carousel_direction }}"
+        data-glide-gap="0"
+        data-glide-style="{{ section_name }}"
+      >
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            {% endif %}
+
+              {% for item in section_announcements %}
+                {% assign message = item.settings.title | default: '' %}
+                {% if message != blank %}
+                  {% if section_announcements_glider_enable %}<li class="glide__slide">{% endif %}
+                    <div class="{{ section_name }}__item body-copy--primary body-copy--4">{{ message }}</div>
+                  {% if section_announcements_glider_enable %}</li>{% endif %}
+                {% endif %}
+              {% endfor %}
+
+            {% if section_announcements_glider_enable %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+{% render 'bs-container', state: 'closed', col: 'col-12', container: section_container %}
+
+{% schema %}
+  {
+    "name": "Announcements",
+    "tag": "section",
+    "class": "announcements position--fixed z-index--200",
+    "settings": [
+      {
+        "content": "Settings",
+        "type": "header"
+      },
+      {
+        "label": "Show Announcements",
+      	"type": "checkbox",
+        "default": true,
+        "id": "enable"
+      },
+      {
+        "label": "On Homepage Only",
+      	"type": "checkbox",
+        "default": false,
+        "id": "homepage_only"
+      },
+      {
+			  "content": "Background",
+			  "type": "header"
+		  },
+      {
+		    "label": "Background",
+		    "type": "select",
+		    "options": [
+          { "label": "Black", "value": "black" },
+			    { "label": "White", "value": "white" }
+		    ],
+		    "default": "white",
+		    "id": "background"
+		  },
+      {
+        "content": "Carousel",
+        "type": "header"
+      },
+      {
+        "label": "Carousel Autoplay",
+        "info": "Time in milliseconds before a slide changes. Set to '0' to disable autoplay.",
+        "type": "range",
+        "min": 0,
+        "max": 8000,
+        "step": 250,
+        "default": 3000,
+        "id": "carousel_autoplay"
+      },
+      {
+        "label": "Carousel Animation Duration",
+        "info": "Duration of the slide transition animation in milliseconds.",
+        "type": "range",
+        "min": 250,
+        "max": 3500,
+        "step": 50,
+        "default": 450,
+        "id": "carousel_animation_duration"
+      },
+      {
+        "label": "Carousel Direction",
+        "info": "Direction of a how a slide moves.",
+        "type": "select",
+		    "options": [
+          { "label": "Left to Right", "value": "ltr" },
+			    { "label": "Right to Left", "value": "rtl" }
+		    ],
+		    "default": "rtl",
+        "id": "carousel_direction"
+      },
+      {
+			  "content": "Container",
+			  "type": "header"
+		  },
+      {
+        "label": "Container",
+        "type": "select",
+        "options": [
+          { "label": "Static", "value": "container" },
+          { "label": "Fluid", "value": "container-fluid" },
+          { "label": "Full Width", "value": "full-width" }
+        ],
+        "default": "container",
+        "id": "container"
+      },
+      {
+			  "content": "Padding",
+			  "type": "header"
+		  },
+		  {
+			  "label": "Top Padding",
+			  "type": "range",
+			  "min": 0,
+			  "max": 300,
+			  "step": 4,
+			  "default": 36,
+        "id": "padding_top"
+		  },
+		  {
+			  "label": "Bottom Padding",
+			  "type": "range",
+			  "min": 0,
+			  "max": 300,
+			  "step": 4,
+			  "default": 36,
+        "id": "padding_bottom"
+		  },
+      {
+        "content": "Text",
+        "type": "header"
+      },
+      {
+        "label": "Text Colour",
+        "type": "select",
+        "options": [
+          { "label": "Dark", "value": "dark" },
+          { "label": "Light", "value": "light" }
+        ],
+        "default": "dark",
+        "id": "text_colour"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Announcement",
+        "type": "announcement",
+        "limit": 5,
+        "settings": [
+          {
+            "label": "Message",
+            "type": "richtext",
+            "id": "title"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

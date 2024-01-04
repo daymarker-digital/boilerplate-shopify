@@ -1,0 +1,199 @@
+{%- liquid
+
+  assign section_name = 'featured-video'
+  assign section_classes = section_name
+  assign section_id = section_name | append: '--' | append: section.id
+
+  assign aos_delay = 250
+  assign aos_delay_increment = 250
+  assign aos_id = section_id
+
+  assign section_cols = section.settings.cols | default: 'col-12'
+  assign section_container = section.settings.container | default: 'container'
+  assign section_video_aspect_ratio_height = section.settings.video_aspect_ratio_height | default: '9'
+  assign section_video_aspect_ratio_width = section.settings.video_aspect_ratio_width | default: '16'
+  assign section_video_inline = true
+  assign section_video_placeholder_image = section.settings.video_placeholder_image | default: false
+  assign section_video_style = section.settings.video_style | default: "inline"
+
+  if "background" == section_video_style
+    assign section_video_inline = false
+  endif
+
+-%}
+
+{%- style -%}
+
+  {%
+    render 'element-styles',
+      background: section.settings.background,
+      id: section_id,
+      padding_bottom: section.settings.padding_bottom,
+      padding_top: section.settings.padding_top,
+  -%}
+
+  #{{ section_id }} .{{ section_name }}__main {
+    aspect-ratio: {{ section_video_aspect_ratio_width }}/{{ section_video_aspect_ratio_height }};
+  }
+
+{%- endstyle -%}
+
+<div class="{{ section_classes }}" id="{{ section_id }}">
+  {% render 'bs-container', state: 'open', col: section_cols, container: section_container %}
+    <div class="{{ section_name }}__main">
+
+      {% for block in section.blocks %}
+        {% assign video_host = block.type | default: '' %}
+        {% assign video_id = block.settings.video_id | default: '' %}
+        {% if video_host != blank and video_id != blank %}
+          {% capture snippet_classes %}{{ section_name }}__embed{% endcapture %}
+          {% render 'lazyload-embed', classes: snippet_classes, video_host: video_host, video_id: video_id, video_inline: section_video_inline %}
+        {% endif %}
+      {% endfor %}
+
+      {% if section_video_placeholder_image %}
+        <div class="{{ section_name }}__placholder-image">
+          {%
+            render 'lazyload-image',
+            alt_text: 'Great Picture',
+            delay: 0,
+            image: section_video_placeholder_image,
+            preload: true,
+            responsive: true,
+            duration: 350,
+          %}
+        </div>
+      {% endif %}
+
+    </div>
+  {% render 'bs-container', state: 'closed', col: section_cols, container: section_container %}
+</div>
+
+{% schema %}
+{
+  "name": "Featured Video",
+  "tag": "section",
+  "class": "section section--featured-video",
+  "max_blocks": 1,
+  "settings": [
+    {
+			"content": "Settings",
+			"type": "header"
+		},
+    {
+      "content": "Anchor",
+      "type": "header"
+    },
+    {
+      "label": "Anchor ID",
+      "info": "Optionally include a unique ID so that sections within the page can be linked to. Anchor IDs must be all lowercase, unique and replaced empty spaces with hyphens. For example: my-great-section-anchor",
+      "type": "text",
+      "id": "anchor_id"
+    },
+    {
+			"content": "Background",
+			"type": "header"
+		},
+    {
+		  "label": "Background",
+		  "type": "select",
+		  "options": [
+        { "label": "Black", "value": "black" },
+			  { "label": "White", "value": "white" }
+		  ],
+		  "default": "white",
+		  "id": "background"
+		},
+    {
+			"content": "Container",
+			"type": "header"
+		},
+    {
+      "label": "Container",
+      "type": "select",
+      "options": [
+        { "label": "Static", "value": "container" },
+        { "label": "Fluid", "value": "container-fluid" },
+        { "label": "Full Width", "value": "full-width" }
+      ],
+      "default": "container",
+      "id": "container"
+    },
+    {
+			"content": "Padding",
+			"type": "header"
+		},
+		{
+			"label": "Top Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 44,
+      "id": "padding_top"
+		},
+		{
+			"label": "Bottom Padding",
+			"type": "range",
+			"min": 0,
+			"max": 300,
+			"step": 4,
+			"default": 44,
+      "id": "padding_bottom"
+		},
+    {
+			"content": "Video",
+			"type": "header"
+		},
+    {
+      "label": "Video Style",
+      "type": "select",
+      "options": [
+        { "label": "Inline (with playback controls)", "value": "inline" },
+        { "label": "Background", "value": "background" }
+      ],
+      "default": "inline",
+      "id": "video_style"
+    },
+    {
+      "label": "Video Aspect Ratio (Width)",
+      "type": "text",
+      "default": "16",
+      "id": "video_aspect_ratio_width"
+    },
+    {
+      "label": "Video Aspect Ratio (Height)",
+      "type": "text",
+      "default": "9",
+      "id": "video_aspect_ratio_height"
+    },
+    {
+      "label": "Video Placeholder Image",
+      "type": "image_picker",
+      "id": "video_placeholder_image"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Vimeo",
+      "type": "vimeo",
+      "settings": [
+        {
+          "label": "Video ID",
+          "type": "text",
+          "id": "video_id"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature Video",
+      "category": "Video"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"]
+  }
+}
+{% endschema %}

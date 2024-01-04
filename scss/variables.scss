@@ -1,0 +1,281 @@
+// ---------------------------------------- AOS
+$theme-aos-settings: (
+  'travel': 8px,
+);
+
+// ---------------------------------------- Block Quote
+$theme-block-quote-sizes: (
+  'xl': (
+    'base': 28px,
+    'lg': 48px,
+  ),
+  'lg': (
+    'base': 24px,
+    'lg': 34px,
+  ),
+  'md': (
+    'base': 22px,
+    'lg': 32px,
+  ),
+  'sm': (
+    'base': 20px,
+    'lg': 30px,
+  ),
+);
+
+// ---------------------------------------- Body Copy
+$theme-body-copy-font-sizes: (
+  'lg': (
+    'base': 16px,
+    'sm': 16px,
+    'md': 18px,
+    'lg': 18px,
+    'xl': 18px,
+    'xxl': 20px
+  ),
+  'md': (
+    'base': 14px,
+    'sm': 14px,
+    'md': 16px,
+    'lg': 16px,
+    'xl': 16px,
+    'xxl': 18px
+  ),
+  'sm': (
+    'base': 12px,
+    'sm': 12px,
+    'md': 14px,
+    'lg': 14px,
+    'xl': 14px,
+    'xxl': 16px
+  ),
+  'xs': (
+    'base': 10px,
+    'sm': 10px,
+    'md': 12px,
+    'lg': 12px,
+    'xl': 12px,
+    'xxl': 14px
+  )
+);
+
+// ---------------------------------------- Border
+$theme-border-settings: (
+  'radius': 8px,
+  'width': 2px,
+);
+
+// ---------------------------------------- Button
+$theme-button-settings: (
+  'font-sizes': (
+    'base': 12px,
+    'sm': 12px,
+    'md': 14px,
+    'lg': 14px,
+    'xl': 14px,
+    'xxl': 16px
+  ),
+  'heights': (
+    'base': 38px,
+    'sm': 40px,
+    'md': 42px,
+    'lg': 40px,
+    'xl': 42px,
+    'xxl': 44px
+  ),
+  'widths': (
+    'base': 150px,
+    'sm': 150px,
+    'md': 180px,
+    'lg': 360px,
+    'xl': 360px,
+    'xxl': 400px
+  )
+);
+
+// ---------------------------------------- Burger
+$theme-burger-settings: (
+  'width': 30px,
+  'height': 14px
+);
+
+// ---------------------------------------- Caption
+$theme-caption-font-sizes: (
+  'lg': (
+    'base': 16px,
+    'sm': 16px,
+    'md': 16px,
+    'lg': 18px,
+    'xl': 18px,
+    'xxl': 18px
+  ),
+  'md': (
+    'base': 14px,
+    'sm': 14px,
+    'md': 14px,
+    'lg': 16px,
+    'xl': 16px,
+    'xxl': 16px
+  ),
+  'sm': (
+    'base': 12px,
+    'sm': 12px,
+    'md': 12px,
+    'lg': 14px,
+    'xl': 14px,
+    'xxl': 14px
+  ),
+  'xs': (
+    'base': 10px,
+    'sm': 10px,
+    'md': 10px,
+    'lg': 12px,
+    'xl': 12px,
+    'xxl': 12px
+  )
+);
+
+// ---------------------------------------- Colour
+$theme-colours: (
+  'black': #000000,
+  'white': #ffffff,
+  'yellow': #FFC700,
+);
+
+// ---------------------------------------- Drawer
+$theme-drawer-settings: (
+  'widths': (
+    'base': 100%,
+    'sm': 100%,
+    'md': 100%,
+    'lg': 50%,
+    'xl': 50%,
+    'xxl': 40%
+  )
+);
+
+// ---------------------------------------- Font Family
+$theme-font-families: (
+  'sans-serif': sans-serif,
+  'serif': serif,
+  'cursive': cursive,
+  'mono': monospace,
+  'neue-haas-grotesk-display': 'neue-haas-grotesk-display, sans-serif'
+);
+
+// ---------------------------------------- Header
+$theme-header-heights: (
+  'base': 90px,
+  'sm': 90px,
+  'md': 90px,
+  'lg': 90px,
+  'xl': 90px,
+  'xxl': 90px,
+  'total': auto
+);
+
+// ---------------------------------------- Heading
+$theme-heading-font-sizes: (
+  'xl': (
+    'base': 28px,
+    'sm': 34px,
+    'md': 40px,
+    'lg': 48px,
+    'xl': 58px,
+    'xxl': 70px
+  ),
+  'lg': (
+    'base': 28px,
+    'sm': 34px,
+    'md': 40px,
+    'lg': 48px,
+    'xl': 58px,
+    'xxl': 70px
+  ),
+  'md': (
+    'base': 26px,
+    'sm': 32px,
+    'md': 438px,
+    'lg': 44px,
+    'xl': 54px,
+    'xxl': 66px
+  ),
+  'sm': (
+    'base': 22px,
+    'sm': 32px,
+    'md': 40px,
+    'lg': 21px,
+    'xl': 25px,
+    'xxl': 28px
+  )
+);
+
+// ---------------------------------------- Input
+$theme-input-heights: (
+  'base': 48px,
+  'sm': 48px,
+  'md': 50px,
+  'lg': 50px,
+  'xl': 52px,
+  'xxl': 54px
+);
+
+// ---------------------------------------- Layout
+$theme-layout-settings: (
+  'gutter': 24px,
+  'container-padding': 20px,
+  'breakpoints': (
+    'base': 0,
+    'sm': 576px,
+    'md': 768px,
+    'lg': 992px,
+    'xl': 1200px,
+    'xxl': 1400px
+  ),
+  'containers': (
+    'base': 100%,
+    'sm': 540px,
+    'md': 740px,
+    'lg': 960px,
+    'xl': 1160px,
+    'xxl': 1360px
+  )
+);
+
+// ---------------------------------------- Marquee
+$theme-marquee-font-sizes: (
+  'xl': (
+    'base': 4.5vw,
+    'lg': 3.5vw,
+  ),
+  'lg': (
+    'base': 4vw,
+    'lg': 3vw,
+  ),
+  'md': (
+    'base': 3.5vw,
+    'lg': 2.5vw,
+  ),
+  'sm': (
+    'base': 3vw,
+    'lg': 2vw,
+  ),
+);
+
+// ---------------------------------------- Media
+$theme-media-height-sizes: (
+  'adapt',
+  '950px',
+  '850px',
+  '750px',
+  '650px',
+  '550px',
+  '450px',
+  '350px'
+);
+
+// ---------------------------------------- Transition
+$theme-transition-settings: (
+  'duration': 280ms,
+  'opacity': 0.3333
+);

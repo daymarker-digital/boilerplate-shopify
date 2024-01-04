@@ -1,0 +1,30 @@
+{% comment %}
+
+    Accepts:
+    - option_value: {String} Sort option handle
+
+    Usage:
+    {% render 'sort-option', name: name %}
+
+{% endcomment %}
+
+{%- if option_value and option_value != blank -%}
+  {%- case option_value -%}
+    {%- when 'best-selling' -%}
+      Best Selling
+    {%- when 'created-ascending' -%}
+      Latest Release (A → Z)
+    {%- when 'created-descending' -%}
+      Latest Release (Z → A)
+    {%- when 'manual' -%}
+      Manual
+    {%- when 'price-ascending' -%}
+      Price ($ → $$$$)
+    {%- when 'price-descending' -%}
+      Price ($$$$ → $)
+    {%- when 'title-ascending' -%}
+      Name (A → Z)
+    {%- when 'title-descending' -%}
+      Name (Z → A)
+  {%- endcase -%}
+{%- endif -%}

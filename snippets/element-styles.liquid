@@ -1,0 +1,136 @@
+{%- if id and id != blank -%}
+
+  {% comment %}
+
+    Accepts:
+      - background: {String} Optionally include a named colour value
+      - background_image: {Object} Optionally include a background image
+      - background_image_position_desktop: {String} Optionally include specific positioning for large screen sizes
+      - background_image_position_mobile: {String} Optionally include specific positioning for small screen sizes
+      - background_image_repeat: {String} Optionally include specific repeat arguments for small screen sizes
+      - background_image_size: {String} Optionally include specific size arguments for small screen sizes
+      - border_bottom: {Boolean} Optionally include bottom border
+      - border_top: {Boolean} Optionally include top border
+      - height_desktop: {String} Optionally include specific height for large screen sizes
+      - height_mobile: {String} Optionally include specific height for small screen sizes
+      - id: {String} Element ID
+      - padding_bottom: {Integer} Optionally include an integer value for bottom padding
+      - padding_top: {Integer} Optionally include an integer value for top padding
+
+    Usage:
+      {%
+        render 'element-styles',
+          background: 'off-white',
+          background_image: false,
+          background_image_position_desktop: 'center center',
+          background_image_position_mobile: 'center left',
+          background_image_repeat: 'no-repeat',
+          background_image_size: 'cover',
+          border_bottom: false,
+          border_top: true,
+          height_desktop: section.settings.height_desktop,
+          height_mobile: section.settings.height_mobile,
+          id: 'some-unique-identifier',
+          padding_bottom: 32,
+          padding_top: 64
+      %}
+
+  {% endcomment %}
+
+  {%- liquid
+
+    assign background = background | default: 'none'
+    assign background_image = background_image | default: false
+    assign background_image_active = false
+    assign background_image_position_desktop = background_image_position_desktop | default: 'center center'
+    assign background_image_position_mobile = background_image_position_mobile | default: 'center center'
+    assign background_image_repeat = background_image_repeat | default: 'no-repeat'
+    assign background_image_size = background_image_size | default: 'cover'
+
+    assign border_bottom = border_bottom | default: false
+    assign border_top = border_top | default: false
+
+    assign height_desktop = height_desktop | default: ''
+    assign height_mobile = height_mobile | default: ''
+
+    assign padding_bottom = padding_bottom | default: 0
+    assign padding_top = padding_top | default: 0
+
+    assign text_colour = text_colour | default: 'dark'
+
+    if background == 'image' and background_image
+      assign background_image_active = true
+    endif
+
+  -%}
+
+  #{{ id }} {
+
+    {% if 'dark' == text_colour %}
+      color: var(--theme-colour--black);
+    {% else %}
+      color: var(--theme-colour--white);
+    {% endif %}
+
+    {%- if height_mobile != blank -%}
+      height: {{ height_mobile }}px;
+    {%- endif -%}
+
+    {%- if background_image_active -%}
+      background: url('{{ background_image | img_url: '1800x' }}');
+      background-repeat: {{ background_image_repeat }};
+      background-position: {{ background_image_position_mobile }};
+      background-size: {{ background_image_size }};
+    {%- else -%}
+      {%- unless background == 'none' -%}
+        background: var(--theme-colour--{{ background }});
+      {%- endunless -%}
+    {%- endif -%}
+
+    {%- if border_bottom -%}
+      border-bottom-color: var(--theme-colour--black);
+      border-bottom-width: var(--theme-border--width);
+      border-bottom-style: solid;
+    {%- endif -%}
+
+    {%- if border_top -%}
+      border-top-color: var(--theme-colour--black);
+      border-top-width: var(--theme-border--width);
+      border-top-style: solid;
+    {%- endif -%}
+
+    {%- if padding_top > 0 -%}
+      padding-top: calc({{ padding_top }}px * 0.75);
+    {%- endif -%}
+
+    {%- if padding_bottom > 0 -%}
+      padding-bottom: calc({{ padding_bottom }}px  * 0.75);
+    {%- endif -%}
+
+  }
+
+  @media screen and (min-width: 992px) {
+
+    #{{ id }} {
+
+      {%- if height_desktop != blank -%}
+        height: {{ height_desktop }}px;
+      {%- endif -%}
+
+      {%- if background_image_active -%}
+        background-position: {{ background_image_position_desktop }};
+      {%- endif -%}
+
+      {%- if padding_top > 0 -%}
+        padding-top: {{ padding_top }}px;
+      {%- endif -%}
+
+      {%- if padding_bottom > 0 -%}
+        padding-bottom: {{ padding_bottom }}px;
+      {%- endif -%}
+
+    }
+
+  }
+
+{%- endif -%}

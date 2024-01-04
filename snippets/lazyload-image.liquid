@@ -1,0 +1,134 @@
+{% comment %}
+
+    Accepts:
+    - alt_text: {String} Optionally povide alternative text for SEO
+    - background: {Boolean} Optionally display image as a background image element
+    - classes: {String} Optionally include custom classes
+    - delay: {Integer} Optionally, in multiples of 50, include a CSS transition delay in milliseconds
+    - duration: {Integer} Optionally, in multiples of 50, include a CSS transition duration in milliseconds
+    - image: {Object} Image Liquid object
+    - preload: {Boolean} Optionally set lazyload to preload image asset
+    - responsive: {Boolean} Optionally include source-set responsive image attributes
+
+    Usage:
+    {%
+      render 'lazyload-image',
+      alt_text: 'Great Picture',
+      background: false,
+      classes: 'sample-class',
+      cloudinary: false,
+      delay: 50,
+      image: false,
+      preload: false,
+      responsive: false,
+      duration: 500,
+    %}
+
+{% endcomment %}
+
+{%- liquid
+
+ assign alt_text = alt_text | default: false
+ assign base_classes = 'lazyload lazyload-item lazyload-item--image'
+ assign cloudinary = cloudinary | default: false
+ assign sizes = '180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048' | split: ', '
+ assign preload = preload | default: true
+ assign responsive = responsive | default: true
+ assign responsive_sizes = ''
+ assign delay = delay | default: 0
+ assign duration = duration | default: 350
+ assign background = background | default: false
+
+ if preload
+   assign base_classes = base_classes | append: ' lazypreload'
+ endif
+ if background
+   assign base_classes = base_classes | append: ' lazyload-item--background background'
+ else
+   assign base_classes = base_classes | append: ' lazyload-item--inline inline'
+ endif
+
+ if classes
+   assign base_classes = base_classes | prepend: ' ' | prepend: classes
+ endif
+
+-%}
+
+{% comment %} ## Conditional Layout ## {% endcomment %}
+
+{% if image %}
+  {% if background %}
+
+    {% assign image_src = image | img_url:'2048x' %}
+    {% assign image_src_10x = image | img_url:'10x' %}
+
+    {% if cloudinary %}
+      {% assign image_src = image.cloudinary_src | append: 'w_2048' %}
+      {% assign image_src_10x = image.cloudinary_src | append: 'w_10' %}
+    {% endif %}
+
+    <div
+      class='{{ base_classes }}'
+      data-bg='{{ image_src }}'
+      data-transition-delay='{{ delay }}'
+      data-transition-duration='{{ duration }}'
+      style="background-url('{{ image_src_10x }}');"
+    ></div>
+
+  {% else %}
+
+    {% unless alt_text %}
+			{% assign alt_text = image.alt %}
+		{% endunless %}
+
+    {% assign image_src = image | img_url:'2048x' %}
+    {% assign image_src_10x = image | img_url:'10x' %}
+    {% assign image_height = image.height | remove: "px" %}
+    {% assign image_width = image.width | remove: "px" %}
+
+    {% if cloudinary %}
+      {% assign image_src = image.cloudinary_src | append: 'w_2048' %}
+      {% assign image_src_10x = image.cloudinary_src | append: 'w_10' %}
+    {% endif %}
+
+    {% if responsive %}
+      {% for size in sizes %}
+
+        {% assign responsive_width = size | append: 'w' %}
+
+        {% assign image_size_filter = size | append: 'x' %}
+        {% assign image_src = image | img_url:image_size_filter %}
+
+        {% if cloudinary %}
+          {% assign image_size_filter = 'w_' | append: size %}
+          {% assign image_src = image.cloudinary_src | append: image_size_filter %}
+        {% endif %}
+
+        {% assign responsive_sizes = responsive_sizes | append: image_src | append: ' ' | append: responsive_width %}
+
+        {% if forloop.last != true %}
+          {% assign responsive_sizes = responsive_sizes | append: ', ' %}
+        {% endif %}
+
+      {% endfor %}
+    {% endif %}
+
+    <img
+      class='{{ base_classes }}'
+      src='{{ image_src_10x }}'
+      width='{{ image_width }}'
+      height='{{ image_height }}'
+      data-src='{{ image_src }}'
+      data-transition-delay='{{ delay }}'
+      data-transition-duration='{{ duration }}'
+      {% if responsive_sizes != '' %}
+        data-sizes='auto'
+        data-srcset='{{ responsive_sizes }}'
+      {% endif %}
+      {% if image_alt %}
+        alt='{{ image_alt }}'
+      {% endif %}
+    />
+
+  {% endif %}
+{% endif %}
