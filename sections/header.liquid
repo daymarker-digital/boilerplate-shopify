@@ -3,27 +3,13 @@
   assign section_name = 'header'
   assign section_id = 'shopify-section-' | append: section.id
 
-  assign aos_delay = 250
-  assign aos_delay_increment = 250
-  assign aos_id = section_id
-
-  assign section_container = section.settings.container
-
 -%}
 
-{% render 'bs-container', state: 'open', col: 'col-12', container: section_container %}
-  <div class="{{ section_name }}__main">
-
-      <div class="{{ section_name }}__brand">
-        <a class="{{ section_name }}__brand-link link gift-shop" href="/" target="_self" title="Very Polite Gift Shop">
-          {% render 'svg-gift-shop-logo' %}
-        </a>
-        <a class="{{ section_name }}__brand-link link very-polite" href="https://weareverypolite.com" target="_blank" title="Very Polite Agency">
-          {% render 'svg-very-polite-logo' %}
-        </a>
-      </div>
-  </div>
-{% render 'bs-container', state: 'closed', col: 'col-12', container: section_container %}
+<div class="{{ section_name }}__main">
+    <div class="{{ section_name }}__brand">
+      <a class="{{ section_name }}__brand-link" href="/" target="_self" title="Very Polite Gift Shop">Logo</a>
+    </div>
+</div>
 
 {% schema %}
   {
