@@ -1,1 +1,44 @@
-{"name":"404","order":["main"],"sections":{"main":{"settings":{},"type":"main-404"}}}
+{
+  "order": [
+    "main",
+    "main_404_DtEbRg"
+  ],
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+      }
+    },
+    "main_404_DtEbRg": {
+      "type": "main-404",
+      "blocks": {
+        "heading_MMBQwa": {
+          "type": "heading",
+          "settings": {
+            "heading": ""
+          }
+        },
+        "message_4TPWtQ": {
+          "type": "message",
+          "settings": {
+            "message": ""
+          }
+        },
+        "button_69XWq6": {
+          "type": "button",
+          "settings": {
+            "title": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_MMBQwa",
+        "message_4TPWtQ",
+        "button_69XWq6"
+      ],
+      "settings": {
+      }
+    }
+  }
+}
