@@ -58,7 +58,7 @@
     {% section 'announcements' %}
     {% section 'header' %}
 
-    <main class="{% render 'theme--classes' %} content-for-layout focus-none" role="main" tabindex="-1">
+    <main class="{% render 'theme--classes' %} content-for-layout focus-none temporary" role="main" tabindex="-1">
       {% case request.path %}
         {% when '/policies/privacy-policy' %}
           {% section 'policy-privacy' %}
