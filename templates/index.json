@@ -1,6 +1,7 @@
 {
   "order": [
-    "featured_text_CDEX3r"
+    "featured_text_CDEX3r",
+    "nested_blocks_fzf8xH"
   ],
   "sections": {
     "featured_text_CDEX3r": {
@@ -36,6 +37,11 @@
         "border_bottom": false,
         "padding_top": 36,
         "padding_bottom": 36
+      }
+    },
+    "nested_blocks_fzf8xH": {
+      "type": "nested-blocks",
+      "settings": {
       }
     }
   }
