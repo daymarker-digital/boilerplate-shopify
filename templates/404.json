@@ -5,6 +5,32 @@
   "sections": {
     "main": {
       "type": "main-404",
+      "blocks": {
+        "heading_xDFWMX": {
+          "type": "heading",
+          "settings": {
+            "heading": "404 Not Found!"
+          }
+        },
+        "message_PbbLt3": {
+          "type": "message",
+          "settings": {
+            "message": "<p>Aliquam lobortis lorem lectus, eget tempor turpis facilisis eu. Aliquam condimentum vehicula sollicitudin. Phasellus pulvinar condimentum odio in ultricies. Vestibulum sed libero sed ipsum commodo tincidunt at vitae mi. Sed dictum porttitor ipsum eget hendrerit.<\/p>"
+          }
+        },
+        "button_JMEpMF": {
+          "type": "button",
+          "settings": {
+            "title": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_xDFWMX",
+        "message_PbbLt3",
+        "button_JMEpMF"
+      ],
       "settings": {
       }
     }
