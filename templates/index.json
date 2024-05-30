@@ -9,7 +9,7 @@
         "heading_atDJxj": {
           "type": "heading",
           "settings": {
-            "heading": "",
+            "heading": "Sample Heading",
             "size": "1",
             "style": "primary"
           }
