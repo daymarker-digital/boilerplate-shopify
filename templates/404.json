@@ -21,8 +21,8 @@
         "button_JMEpMF": {
           "type": "button",
           "settings": {
-            "title": "",
-            "link": ""
+            "title": "Back Home",
+            "link": "\/"
           }
         }
       },
