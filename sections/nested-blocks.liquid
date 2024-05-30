@@ -1,4 +1,7 @@
+<h1>Nested Blocks</h1>
+
 {% content_for 'blocks' %}
+
 {% schema %}
 {
   "name": "Nested Blocks",
@@ -6,6 +9,9 @@
   "class": "section section--nested-blocks",
   "blocks": [
     { "type": "@theme" }
+  ],
+  "presets": [
+    { "name": "Nested Blocks" }
   ],
   "enabled_on": {
     "templates": [ "*" ],
