@@ -1,7 +1,17 @@
 {% content_for 'blocks' %}
 {% schema %}
 {
-  "name": "Section",
-  "blocks": [{"type": "@theme"}]
+  "name": "Nested Blocks",
+  "tag": "section",
+  "class": "section section--nested-blocks",
+  "blocks": [
+    { "type": "@theme" }
+  ],
+  "presets": [
+    {
+      "name": "Featured Text",
+      "blocks": []
+    }
+  ]
 }
 {% endschema %}
